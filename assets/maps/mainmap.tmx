@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1-99-gec89c545" orientation="orthogonal" renderorder="right-down" width="18" height="16" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.1-99-gec89c545" orientation="orthogonal" renderorder="right-down" width="18" height="16" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="2">
  <tileset firstgid="1" source="tileset.tsx"/>
+ <tileset firstgid="99" source="objects.tsx"/>
  <layer id="1" name="ground" width="18" height="16">
   <data encoding="base64" compression="zlib">
    eJxdk2sOhCAMhL0CElBQdt3X/a+4NZkvmfBj0gq0005rW5YlB7owArv8NZCEIrvqvsg/Aqf8Kp/3h+wr8Axcyr+Jc1iOrrg7R9M59WTl+QbegY9ihviyajp1Rq27LL0dwiaOpBj6bbrrsvukTdU5vMR340cbfHoZVkNWrjT10ezb+cg1pvfV5kHepJgii9bF+iqmGTOm92b8zJj5NntfTGefb7P8RTUC36tNZ8z+fv8LPITLZsAuVdOFGunptH7ZE3aFWWfrEc7d7tkZ9GW3mQ21kIfdpZZk+dkj8lTj8H8G7tUs2rs+8LRpVsdUu/+D6O4zJR/7Chd7wi6gJ5zd4nzHZi2HQE3ZfPRijvf3Hx87GuI=
@@ -21,4 +22,7 @@
    eJyzZmBgsIRiKyQ2DFszEAcsCcjbEGmOFZQ2p9AcQu4h1l+E1FkRkIcBbO7RR8LEugebfcjmEPI3Me7BJU+sOaTIwwAtwxkELAjIk2ofuemHEY1PrXCmJP2QIo+sDlY+4GITAwB37wxQ
   </data>
  </layer>
+ <objectgroup id="5" name="objects">
+  <object id="1" gid="99" x="50.0586" y="458.934" width="32" height="32"/>
+ </objectgroup>
 </map>
