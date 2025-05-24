@@ -25,7 +25,7 @@
         }
     },
     "frame.defaultDuration": 250,
-    "last.imagePath": "/home/gaja/IdeaProjects/mystictutorial/assets/maps",
+    "last.imagePath": "/home/gaja/IdeaProjects/mystictutorial/assets/maps/objects",
     "map.height": 14,
     "map.lastUsedFormat": "tmx",
     "map.layerDataFormat": null,
@@ -35,6 +35,7 @@
         "tileset.tsx"
     ],
     "project": "mystic.tiled-project",
+    "property.type": "float",
     "recentFiles": [
         "tileset.tsx",
         "mainmap.tmx"
