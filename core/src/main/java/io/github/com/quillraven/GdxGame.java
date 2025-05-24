@@ -2,12 +2,16 @@ package io.github.com.quillraven;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.HashMap;
 
 public class GdxGame extends Game {
     public static final float WORLD_HEIGHT = 11f;
@@ -18,6 +22,8 @@ public class GdxGame extends Game {
     private OrthographicCamera camera;
     private Viewport viewport;
 
+    private final HashMap<Class<? extends Screen>, Screen> screenCache = new HashMap<>();
+
     @Override
     public void create() {
         batch = new SpriteBatch();
@@ -25,7 +31,24 @@ public class GdxGame extends Game {
         camera = new OrthographicCamera();
         viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
 
-        setScreen(new GameScreen(this));
+        addScreen(new GameScreen(this));
+        setScreen(GameScreen.class);
+    }
+
+    public void addScreen(Screen screen) {
+        screenCache.put(screen.getClass(), screen);
+    }
+
+    public void setScreen(Class<? extends Screen> screenClass) {
+        Screen screen = screenCache.get(screenClass);
+        if (screen == null) {
+            throw new GdxRuntimeException("Screen " + screenClass.getSimpleName() + " not found in cache");
+        }
+        super.setScreen(screen);
+    }
+
+    public void removeScreen(Screen screen) {
+        screenCache.remove(screen.getClass());
     }
 
     @Override
@@ -44,9 +67,11 @@ public class GdxGame extends Game {
 
     @Override
     public void dispose() {
-        if (screen != null) {
+        for (Screen screen : screenCache.values()) {
             screen.dispose();
         }
+        screenCache.clear();
+
         batch.dispose();
         assetManager.dispose();
     }
