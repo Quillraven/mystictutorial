@@ -1,0 +1,42 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "mainmap.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "mainmap.tmx": {
+            "scale": 1.74265625,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 191.94835470277056,
+                "y": 356.35255088317047
+            }
+        },
+        "tileset.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "frame.defaultDuration": 250,
+    "last.imagePath": "/home/gaja/IdeaProjects/mystictutorial/assets/maps",
+    "map.height": 14,
+    "map.lastUsedFormat": "tmx",
+    "map.layerDataFormat": null,
+    "map.width": 20,
+    "openFiles": [
+        "mainmap.tmx",
+        "tileset.tsx"
+    ],
+    "project": "mystic.tiled-project",
+    "recentFiles": [
+        "tileset.tsx",
+        "mainmap.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.margin": 4,
+    "tileset.spacing": 8
+}
