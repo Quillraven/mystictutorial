@@ -16,6 +16,9 @@
                 "y": 356.35255088317047
             }
         },
+        "objects.tsx": {
+            "dynamicWrapping": true
+        },
         "tileset.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
@@ -38,5 +41,6 @@
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.margin": 4,
-    "tileset.spacing": 8
+    "tileset.spacing": 8,
+    "tileset.type": 1
 }
