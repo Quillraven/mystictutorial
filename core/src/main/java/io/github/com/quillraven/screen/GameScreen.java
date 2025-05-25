@@ -4,6 +4,8 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import io.github.com.quillraven.GdxGame;
 import io.github.com.quillraven.asset.MapAsset;
@@ -18,11 +20,14 @@ public class GameScreen extends ScreenAdapter {
     private final TiledService tiledService;
     private final Engine engine;
     private final TiledAshleySpawner tiledAshleySpawner;
+    private final World physicWorld;
 
     public GameScreen(GdxGame game) {
         this.tiledService = new TiledService(game.getAssetService());
+        this.physicWorld = new World(Vector2.Zero, true);
+        this.physicWorld.setAutoClearForces(false);
         this.engine = new Engine();
-        this.tiledAshleySpawner = new TiledAshleySpawner(this.engine);
+        this.tiledAshleySpawner = new TiledAshleySpawner(this.engine, this.physicWorld);
 
         // add ECS systems
         this.engine.addSystem(new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera()));
@@ -53,5 +58,6 @@ public class GameScreen extends ScreenAdapter {
                 disposable.dispose();
             }
         }
+        this.physicWorld.dispose();
     }
 }

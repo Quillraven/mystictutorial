@@ -6,20 +6,27 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import io.github.com.quillraven.GdxGame;
 import io.github.com.quillraven.component.Graphic;
+import io.github.com.quillraven.component.Physic;
 import io.github.com.quillraven.component.Transform;
 
 public class TiledAshleySpawner {
     private final Engine engine;
+    private final World physicWorld;
 
-    public TiledAshleySpawner(Engine engine) {
+    public TiledAshleySpawner(Engine engine, World physicWorld) {
         this.engine = engine;
+        this.physicWorld = physicWorld;
     }
 
     public void loadMapObjects(TiledMap tiledMap) {
@@ -49,9 +56,26 @@ public class TiledAshleySpawner {
         Entity entity = this.engine.createEntity();
 
         addEntityTransform(tileMapObject, entity);
+        addEntityPhysic(tileMapObject.getTile().getObjects(), entity);
         entity.add(new Graphic(tileMapObject.getTile().getTextureRegion(), Color.WHITE.cpy()));
 
         this.engine.addEntity(entity);
+    }
+
+    private void addEntityPhysic(MapObjects objects, Entity entity) {
+        if (objects.getCount() == 0) return;
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(entity.getComponent(Transform.class).position());
+        bodyDef.fixedRotation = true;
+
+        Body body = this.physicWorld.createBody(bodyDef);
+        for (MapObject object : objects) {
+
+        }
+
+        entity.add(new Physic(body, new Vector2(body.getPosition())));
     }
 
     private static void addEntityTransform(TiledMapTileMapObject tileMapObject, Entity entity) {
