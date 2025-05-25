@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -26,6 +27,7 @@ public class GdxGame extends Game {
     private AssetService assetService;
     private OrthographicCamera camera;
     private Viewport viewport;
+    private GLProfiler glProfiler;
 
     private final HashMap<Class<? extends Screen>, Screen> screenCache = new HashMap<>();
 
@@ -37,6 +39,9 @@ public class GdxGame extends Game {
         assetService = new AssetService(new InternalFileHandleResolver());
         camera = new OrthographicCamera();
         viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
+
+        glProfiler = new GLProfiler(Gdx.graphics);
+        glProfiler.enable();
 
         addScreen(new GameScreen(this));
         setScreen(GameScreen.class);
@@ -60,10 +65,14 @@ public class GdxGame extends Game {
 
     @Override
     public void render() {
+        glProfiler.reset();
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         super.render();
+
+        Gdx.graphics.setTitle("mystictutorial - Draw Calls: " + glProfiler.getDrawCalls());
     }
 
     @Override
