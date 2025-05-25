@@ -10,16 +10,27 @@
     "fileStates": {
         "mainmap.tmx": {
             "scale": 1.74265625,
-            "selectedLayer": 3,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 191.94835470277056,
-                "y": 356.35255088317047
+                "x": 152.9274634627455,
+                "y": 285.1968080337129
             }
         },
         "objects.tsx": {
-            "dynamicWrapping": true
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "secondmap.tmx": {
+            "scale": 1.6328125,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 288.1531100478469,
+                "y": 256
+            }
         },
         "tileset.tsx": {
+            "dynamicWrapping": false,
             "scaleInDock": 1,
             "scaleInEditor": 1
         }
@@ -32,11 +43,13 @@
     "map.width": 20,
     "openFiles": [
         "mainmap.tmx",
-        "tileset.tsx"
+        "tileset.tsx",
+        "objects.tsx"
     ],
     "project": "mystic.tiled-project",
     "property.type": "float",
     "recentFiles": [
+        "objects.tsx",
         "tileset.tsx",
         "mainmap.tmx"
     ],

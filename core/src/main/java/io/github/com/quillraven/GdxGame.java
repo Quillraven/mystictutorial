@@ -1,24 +1,29 @@
 package io.github.com.quillraven;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import io.github.com.quillraven.asset.AssetService;
+import io.github.com.quillraven.screen.GameScreen;
 
 import java.util.HashMap;
 
 public class GdxGame extends Game {
     public static final float WORLD_HEIGHT = 11f;
     public static final float WORLD_WIDTH = 6f;
+    public static final float UNIT_SCALE = 1f / 32f;
 
-    private SpriteBatch batch;
-    private AssetManager assetManager;
+    private Batch batch;
+    private AssetService assetService;
     private OrthographicCamera camera;
     private Viewport viewport;
 
@@ -26,8 +31,10 @@ public class GdxGame extends Game {
 
     @Override
     public void create() {
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+
         batch = new SpriteBatch();
-        assetManager = new AssetManager();
+        assetService = new AssetService(new InternalFileHandleResolver());
         camera = new OrthographicCamera();
         viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
 
@@ -73,15 +80,16 @@ public class GdxGame extends Game {
         screenCache.clear();
 
         batch.dispose();
-        assetManager.dispose();
+        assetService.debugDiagnostics();
+        assetService.dispose();
     }
 
-    public SpriteBatch getBatch() {
+    public Batch getBatch() {
         return batch;
     }
 
-    public AssetManager getAssetManager() {
-        return assetManager;
+    public AssetService getAssetService() {
+        return assetService;
     }
 
     public OrthographicCamera getCamera() {
