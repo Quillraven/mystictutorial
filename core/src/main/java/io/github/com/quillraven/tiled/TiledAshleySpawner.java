@@ -7,9 +7,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -36,6 +38,21 @@ public class TiledAshleySpawner {
                 loadTileLayer(tileLayer);
             } else if ("objects".equals(layer.getName())) {
                 loadObjectLayer(layer);
+            } else if ("trigger".equals(layer.getName())) {
+                loadTriggerLayer(layer);
+            }
+        }
+    }
+
+    private void loadTriggerLayer(MapLayer triggerLayer) {
+        for (MapObject mapObject : triggerLayer.getObjects()) {
+            if (mapObject instanceof RectangleMapObject rectMapObj) {
+                Entity entity = this.engine.createEntity();
+                addEntityTransform(rectMapObj, entity);
+                addEntityPhysic(rectMapObj, entity);
+                this.engine.addEntity(entity);
+            } else {
+                throw new GdxRuntimeException("Unsupported trigger: " + mapObject.getClass().getSimpleName());
             }
         }
     }
@@ -48,7 +65,7 @@ public class TiledAshleySpawner {
             if (mapObject instanceof TiledMapTileMapObject tileMapObject) {
                 spawnEntityOf(tileMapObject);
             } else {
-                throw new GdxRuntimeException("Unsupported map object: " + mapObject.getClass().getSimpleName());
+                throw new GdxRuntimeException("Unsupported object: " + mapObject.getClass().getSimpleName());
             }
         }
     }
@@ -61,6 +78,22 @@ public class TiledAshleySpawner {
         entity.add(new Graphic(tileMapObject.getTile().getTextureRegion(), Color.WHITE.cpy()));
 
         this.engine.addEntity(entity);
+    }
+
+    private void addEntityPhysic(RectangleMapObject rectMapObj, Entity entity) {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        Transform transform = entity.getComponent(Transform.class);
+        bodyDef.position.set(transform.position());
+        bodyDef.fixedRotation = true;
+
+        Body body = this.physicWorld.createBody(bodyDef);
+        body.setUserData(entity);
+        FixtureDef fixtureDef = TiledPhysics.fixtureDefOfMapObject(rectMapObj, transform.scaling(), new Vector2(transform.position()));
+        body.createFixture(fixtureDef);
+        fixtureDef.shape.dispose();
+
+        entity.add(new Physic(body, new Vector2(body.getPosition())));
     }
 
     private void addEntityPhysic(MapObjects objects, Entity entity) {
@@ -93,5 +126,16 @@ public class TiledAshleySpawner {
         size.scl(GdxGame.UNIT_SCALE);
 
         entity.add(new Transform(position, 0, size, scaling, 0f));
+    }
+
+    private void addEntityTransform(RectangleMapObject rectMapObj, Entity entity) {
+        Rectangle rect = rectMapObj.getRectangle();
+        Vector2 position = new Vector2(rect.getX(), rect.getY());
+        Vector2 size = new Vector2(rect.getWidth(), rect.getHeight());
+
+        position.scl(GdxGame.UNIT_SCALE);
+        size.scl(GdxGame.UNIT_SCALE);
+
+        entity.add(new Transform(position, 0, size, new Vector2(1f, 1f), 0f));
     }
 }
