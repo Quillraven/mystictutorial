@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import io.github.com.quillraven.GdxGame;
 import io.github.com.quillraven.asset.MapAsset;
+import io.github.com.quillraven.system.CleanupSystem;
 import io.github.com.quillraven.system.PhysicDebugRenderSystem;
 import io.github.com.quillraven.system.RenderSystem;
 import io.github.com.quillraven.system.TiledServiceTestSystem;
@@ -32,6 +33,7 @@ public class GameScreen extends ScreenAdapter {
 
         // add ECS systems
         this.engine.addSystem(new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera()));
+        this.engine.addSystem(new CleanupSystem());
         this.engine.addSystem(new TiledServiceTestSystem(this.tiledService));
         this.engine.addSystem(new PhysicDebugRenderSystem(this.physicWorld, game.getCamera()));
     }
