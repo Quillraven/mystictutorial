@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import io.github.com.quillraven.GdxGame;
@@ -71,8 +72,11 @@ public class TiledAshleySpawner {
         bodyDef.fixedRotation = true;
 
         Body body = this.physicWorld.createBody(bodyDef);
+        body.setUserData(entity);
         for (MapObject object : objects) {
-
+            FixtureDef fixtureDef = TiledPhysics.toFixtureDef(object);
+            body.createFixture(fixtureDef);
+            fixtureDef.shape.dispose();
         }
 
         entity.add(new Physic(body, new Vector2(body.getPosition())));
