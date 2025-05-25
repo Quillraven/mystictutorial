@@ -70,15 +70,17 @@ public class RenderSystem extends SortedIteratingSystem implements Disposable {
         }
 
         Vector2 position = transform.position();
+        Vector2 scaling = transform.scaling();
         Vector2 size = transform.size();
         batch.setColor(graphic.color());
         batch.draw(
             graphic.region(),
-            position.x, position.y,
+            position.x - (1f - scaling.x) * size.x * 0.5f,
+            position.y - (1f - scaling.y) * size.y * 0.5f,
             size.x * 0.5f, size.y * 0.5f,
             size.x, size.y,
-            1, 1,
-            0
+            scaling.x, scaling.y,
+            transform.rotationDeg()
         );
     }
 

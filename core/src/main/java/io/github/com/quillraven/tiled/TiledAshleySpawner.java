@@ -68,13 +68,14 @@ public class TiledAshleySpawner {
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(entity.getComponent(Transform.class).position());
+        Transform transform = entity.getComponent(Transform.class);
+        bodyDef.position.set(transform.position());
         bodyDef.fixedRotation = true;
 
         Body body = this.physicWorld.createBody(bodyDef);
         body.setUserData(entity);
         for (MapObject object : objects) {
-            FixtureDef fixtureDef = TiledPhysics.toFixtureDef(object);
+            FixtureDef fixtureDef = TiledPhysics.fixtureDefOfMapObject(object, transform.scaling(), Vector2.Zero);
             body.createFixture(fixtureDef);
             fixtureDef.shape.dispose();
         }
@@ -86,10 +87,11 @@ public class TiledAshleySpawner {
         Vector2 position = new Vector2(tileMapObject.getX(), tileMapObject.getY());
         TextureRegion textureRegion = tileMapObject.getTile().getTextureRegion();
         Vector2 size = new Vector2(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
+        Vector2 scaling = new Vector2(tileMapObject.getScaleX(), tileMapObject.getScaleY());
+
         position.scl(GdxGame.UNIT_SCALE);
-        size.scl(tileMapObject.getScaleX(), tileMapObject.getScaleY());
         size.scl(GdxGame.UNIT_SCALE);
 
-        entity.add(new Transform(position, 0, size));
+        entity.add(new Transform(position, 0, size, scaling, 0f));
     }
 }
