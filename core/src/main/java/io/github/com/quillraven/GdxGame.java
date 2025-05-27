@@ -14,7 +14,6 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.com.quillraven.asset.AssetService;
-import io.github.com.quillraven.screen.GameScreen;
 import io.github.com.quillraven.screen.LoadingScreen;
 
 import java.util.HashMap;

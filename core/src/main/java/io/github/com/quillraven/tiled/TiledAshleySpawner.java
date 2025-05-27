@@ -18,6 +18,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -32,6 +33,8 @@ import io.github.com.quillraven.component.Physic;
 import io.github.com.quillraven.component.Transform;
 
 public class TiledAshleySpawner {
+    private static final Vector2 DEFAULT_SCALING = new Vector2(1f, 1f);
+
     private final Engine engine;
     private final World physicWorld;
     private final MapObjects tmpMapObjects;
@@ -57,6 +60,20 @@ public class TiledAshleySpawner {
     }
 
     private void loadTileLayer(TiledMapTileLayer tileLayer) {
+        for (int y = 0; y < tileLayer.getHeight(); y++) {
+            for (int x = 0; x < tileLayer.getWidth(); x++) {
+                TiledMapTileLayer.Cell cell = tileLayer.getCell(x, y);
+                if (cell == null) continue;
+
+                TiledMapTile tile = cell.getTile();
+                createBody(tile.getObjects(),
+                    new Vector2(x, y),
+                    DEFAULT_SCALING,
+                    BodyType.StaticBody,
+                    Vector2.Zero,
+                    "environment");
+            }
+        }
     }
 
     private void loadTriggerLayer(MapLayer triggerLayer) {
@@ -71,7 +88,7 @@ public class TiledAshleySpawner {
                     entity);
                 addEntityPhysic(
                     rectMapObj,
-                    BodyDef.BodyType.StaticBody,
+                    BodyType.StaticBody,
                     tmpVec2.set(rect.getX(), rect.getY()).scl(GdxGame.UNIT_SCALE),
                     entity);
                 this.engine.addEntity(entity);
@@ -102,7 +119,7 @@ public class TiledAshleySpawner {
             entity);
         addEntityPhysic(
             tileMapObject.getTile().getObjects(),
-            BodyDef.BodyType.DynamicBody,
+            BodyType.DynamicBody,
             Vector2.Zero,
             entity);
         addEntityAnimation(tileMapObject.getTile(), entity);
@@ -127,31 +144,46 @@ public class TiledAshleySpawner {
         entity.add(new Animation2D(atlasAsset, atlasKey, animationType, Animation.PlayMode.LOOP, 1f));
     }
 
-    private void addEntityPhysic(MapObject mapObject, @SuppressWarnings("SameParameterValue") BodyDef.BodyType bodyType, Vector2 relativeTo, Entity entity) {
+    private void addEntityPhysic(MapObject mapObject, @SuppressWarnings("SameParameterValue") BodyType bodyType, Vector2 relativeTo, Entity entity) {
         if (tmpMapObjects.getCount() > 0) tmpMapObjects.remove(0);
 
         tmpMapObjects.add(mapObject);
         addEntityPhysic(tmpMapObjects, bodyType, relativeTo, entity);
     }
 
-    private void addEntityPhysic(MapObjects mapObjects, BodyDef.BodyType bodyType, Vector2 relativeTo, Entity entity) {
+    private void addEntityPhysic(MapObjects mapObjects, BodyType bodyType, Vector2 relativeTo, Entity entity) {
         if (mapObjects.getCount() == 0) return;
 
+        Transform transform = entity.getComponent(Transform.class);
+        Body body = createBody(mapObjects,
+            transform.getPosition(),
+            transform.getScaling(),
+            bodyType,
+            relativeTo,
+            entity);
+
+        entity.add(new Physic(body, new Vector2(body.getPosition())));
+    }
+
+    private Body createBody(MapObjects mapObjects,
+                            Vector2 position,
+                            Vector2 scaling,
+                            BodyType bodyType,
+                            Vector2 relativeTo,
+                            Object userData) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = bodyType;
-        Transform transform = entity.getComponent(Transform.class);
-        bodyDef.position.set(transform.getPosition());
+        bodyDef.position.set(position);
         bodyDef.fixedRotation = true;
 
         Body body = this.physicWorld.createBody(bodyDef);
-        body.setUserData(entity);
+        body.setUserData(userData);
         for (MapObject object : mapObjects) {
-            FixtureDef fixtureDef = TiledPhysics.fixtureDefOfMapObject(object, transform.getScaling(), relativeTo);
+            FixtureDef fixtureDef = TiledPhysics.fixtureDefOfMapObject(object, scaling, relativeTo);
             body.createFixture(fixtureDef);
             fixtureDef.shape.dispose();
         }
-
-        entity.add(new Physic(body, new Vector2(body.getPosition())));
+        return body;
     }
 
     private static void addEntityTransform(
