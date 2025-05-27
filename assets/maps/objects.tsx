@@ -3,6 +3,8 @@
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
+   <property name="animation" value="WALK"/>
+   <property name="atlasAsset" value="OBJECTS"/>
    <property name="speed" type="float" value="5"/>
   </properties>
   <image source="objects/hero.png" width="64" height="64"/>

@@ -8,12 +8,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Graphic implements Component {
     public static final ComponentMapper<Graphic> MAPPER = ComponentMapper.getFor(Graphic.class);
 
-    private final TextureRegion region;
+    private TextureRegion region;
     private final Color color;
 
     public Graphic(TextureRegion region, Color color) {
         this.region = region;
         this.color = color;
+    }
+
+    public void setRegion(TextureRegion region) {
+        this.region = region;
     }
 
     public TextureRegion getRegion() {

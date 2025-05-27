@@ -32,6 +32,10 @@ public class AssetService implements Disposable {
         this.assetManager.load(atlasAsset.getPath(), TextureAtlas.class);
     }
 
+    public TextureAtlas get(AtlasAsset atlasAsset) {
+        return this.assetManager.get(atlasAsset.getPath(), TextureAtlas.class);
+    }
+
     public boolean update() {
         return this.assetManager.update();
     }

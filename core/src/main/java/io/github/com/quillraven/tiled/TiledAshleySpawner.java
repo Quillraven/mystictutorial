@@ -3,12 +3,15 @@ package io.github.com.quillraven.tiled;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Rectangle;
@@ -19,6 +22,11 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import io.github.com.quillraven.GdxGame;
+import io.github.com.quillraven.asset.AtlasAsset;
+import io.github.com.quillraven.component.Animation2D;
+import io.github.com.quillraven.component.Animation2D.AnimationType;
+import io.github.com.quillraven.component.Facing;
+import io.github.com.quillraven.component.Facing.FacingDirection;
 import io.github.com.quillraven.component.Graphic;
 import io.github.com.quillraven.component.Physic;
 import io.github.com.quillraven.component.Transform;
@@ -48,6 +56,9 @@ public class TiledAshleySpawner {
         }
     }
 
+    private void loadTileLayer(TiledMapTileLayer tileLayer) {
+    }
+
     private void loadTriggerLayer(MapLayer triggerLayer) {
         for (MapObject mapObject : triggerLayer.getObjects()) {
             if (mapObject instanceof RectangleMapObject rectMapObj) {
@@ -68,9 +79,6 @@ public class TiledAshleySpawner {
                 throw new GdxRuntimeException("Unsupported trigger: " + mapObject.getClass().getSimpleName());
             }
         }
-    }
-
-    private void loadTileLayer(TiledMapTileLayer tileLayer) {
     }
 
     private void loadObjectLayer(MapLayer objectLayer) {
@@ -97,12 +105,29 @@ public class TiledAshleySpawner {
             BodyDef.BodyType.DynamicBody,
             Vector2.Zero,
             entity);
+        addEntityAnimation(tileMapObject.getTile(), entity);
+        entity.add(new Facing(FacingDirection.DOWN));
         entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
 
         this.engine.addEntity(entity);
     }
 
-    private void addEntityPhysic(MapObject mapObject, BodyDef.BodyType bodyType, Vector2 relativeTo, Entity entity) {
+    private void addEntityAnimation(TiledMapTile tile, Entity entity) {
+        String animationStr = tile.getProperties().get("animation", "", String.class);
+        if (animationStr.isBlank()) {
+            return;
+        }
+        AnimationType animationType = AnimationType.valueOf(animationStr);
+
+        String atlasAssetStr = tile.getProperties().get("atlasAsset", "", String.class);
+        AtlasAsset atlasAsset = AtlasAsset.valueOf(atlasAssetStr);
+        FileTextureData textureData = (FileTextureData) tile.getTextureRegion().getTexture().getTextureData();
+        String atlasKey = textureData.getFileHandle().nameWithoutExtension();
+
+        entity.add(new Animation2D(atlasAsset, atlasKey, animationType, Animation.PlayMode.LOOP, 1f));
+    }
+
+    private void addEntityPhysic(MapObject mapObject, @SuppressWarnings("SameParameterValue") BodyDef.BodyType bodyType, Vector2 relativeTo, Entity entity) {
         if (tmpMapObjects.getCount() > 0) tmpMapObjects.remove(0);
 
         tmpMapObjects.add(mapObject);
