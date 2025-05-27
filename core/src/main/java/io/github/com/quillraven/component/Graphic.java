@@ -5,13 +5,23 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-/**
- * Component that stores the visual representation of an entity.
- * Contains a texture region and a color for tinting.
- */
-public record Graphic(
-    TextureRegion region,
-    Color color
-) implements Component {
+public class Graphic implements Component {
     public static final ComponentMapper<Graphic> MAPPER = ComponentMapper.getFor(Graphic.class);
+
+    private final TextureRegion region;
+    private final Color color;
+
+    public Graphic(TextureRegion region, Color color) {
+        this.region = region;
+        this.color = color;
+    }
+
+    public TextureRegion getRegion() {
+        return region;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
 }

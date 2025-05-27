@@ -65,22 +65,22 @@ public class RenderSystem extends SortedIteratingSystem implements Disposable {
     protected void processEntity(Entity entity, float deltaTime) {
         Transform transform = Transform.MAPPER.get(entity);
         Graphic graphic = Graphic.MAPPER.get(entity);
-        if (graphic.region() == null) {
+        if (graphic.getRegion() == null) {
             return;
         }
 
-        Vector2 position = transform.position();
-        Vector2 scaling = transform.scaling();
-        Vector2 size = transform.size();
-        batch.setColor(graphic.color());
+        Vector2 position = transform.getPosition();
+        Vector2 scaling = transform.getScaling();
+        Vector2 size = transform.getSize();
+        batch.setColor(graphic.getColor());
         batch.draw(
-            graphic.region(),
+            graphic.getRegion(),
             position.x - (1f - scaling.x) * size.x * 0.5f,
             position.y - (1f - scaling.y) * size.y * 0.5f,
             size.x * 0.5f, size.y * 0.5f,
             size.x, size.y,
             scaling.x, scaling.y,
-            transform.rotationDeg()
+            transform.getRotationDeg()
         );
     }
 

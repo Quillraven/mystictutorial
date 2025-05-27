@@ -33,7 +33,7 @@ public class CleanupSystem extends EntitySystem implements EntityListener {
         // This ONLY works when an entity with a Physic component gets removed entirely from the engine.
         Physic physic = Physic.MAPPER.get(entity);
         if (physic != null) {
-            Body body = physic.body();
+            Body body = physic.getBody();
             body.getWorld().destroyBody(body);
         }
     }

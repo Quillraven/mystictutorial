@@ -115,13 +115,13 @@ public class TiledAshleySpawner {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = bodyType;
         Transform transform = entity.getComponent(Transform.class);
-        bodyDef.position.set(transform.position());
+        bodyDef.position.set(transform.getPosition());
         bodyDef.fixedRotation = true;
 
         Body body = this.physicWorld.createBody(bodyDef);
         body.setUserData(entity);
         for (MapObject object : mapObjects) {
-            FixtureDef fixtureDef = TiledPhysics.fixtureDefOfMapObject(object, transform.scaling(), relativeTo);
+            FixtureDef fixtureDef = TiledPhysics.fixtureDefOfMapObject(object, transform.getScaling(), relativeTo);
             body.createFixture(fixtureDef);
             fixtureDef.shape.dispose();
         }
