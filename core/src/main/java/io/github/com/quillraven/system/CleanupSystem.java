@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.physics.box2d.Body;
 import io.github.com.quillraven.component.Physic;
 
@@ -13,7 +12,7 @@ public class CleanupSystem extends EntitySystem implements EntityListener {
     @Override
     public void addedToEngine(Engine engine) {
         super.addedToEngine(engine);
-        engine.addEntityListener(Family.all(Physic.class).get(), this);
+        engine.addEntityListener(this);
     }
 
     @Override
