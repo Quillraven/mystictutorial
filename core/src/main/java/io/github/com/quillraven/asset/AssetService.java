@@ -3,6 +3,7 @@ package io.github.com.quillraven.asset;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.utils.Disposable;
@@ -16,14 +17,23 @@ public class AssetService implements Disposable {
     }
 
     public TiledMap load(MapAsset mapAsset) {
-        this.assetManager.load(mapAsset.getPath(), TiledMap.class);
+        String path = mapAsset.getPath();
+        this.assetManager.load(path, TiledMap.class);
         this.assetManager.finishLoading();
-        return this.assetManager.get(mapAsset.getPath(), TiledMap.class);
+        return this.assetManager.get(path, TiledMap.class);
     }
 
     public void unload(MapAsset mapAsset) {
         this.assetManager.unload(mapAsset.getPath());
         this.assetManager.finishLoading();
+    }
+
+    public void queue(AtlasAsset atlasAsset) {
+        this.assetManager.load(atlasAsset.getPath(), TextureAtlas.class);
+    }
+
+    public boolean update() {
+        return this.assetManager.update();
     }
 
     public void debugDiagnostics() {

@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.com.quillraven.asset.AssetService;
 import io.github.com.quillraven.screen.GameScreen;
+import io.github.com.quillraven.screen.LoadingScreen;
 
 import java.util.HashMap;
 
@@ -43,8 +44,8 @@ public class GdxGame extends Game {
         glProfiler = new GLProfiler(Gdx.graphics);
         glProfiler.enable();
 
-        addScreen(new GameScreen(this));
-        setScreen(GameScreen.class);
+        addScreen(new LoadingScreen(this));
+        setScreen(LoadingScreen.class);
     }
 
     public void addScreen(Screen screen) {
