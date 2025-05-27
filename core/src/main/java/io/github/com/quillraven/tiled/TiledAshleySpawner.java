@@ -26,10 +26,14 @@ import io.github.com.quillraven.component.Transform;
 public class TiledAshleySpawner {
     private final Engine engine;
     private final World physicWorld;
+    private final MapObjects tmpMapObjects;
+    private final Vector2 tmpVec2;
 
     public TiledAshleySpawner(Engine engine, World physicWorld) {
         this.engine = engine;
         this.physicWorld = physicWorld;
+        this.tmpMapObjects = new MapObjects();
+        this.tmpVec2 = new Vector2();
     }
 
     public void loadMapObjects(TiledMap tiledMap) {
@@ -48,8 +52,17 @@ public class TiledAshleySpawner {
         for (MapObject mapObject : triggerLayer.getObjects()) {
             if (mapObject instanceof RectangleMapObject rectMapObj) {
                 Entity entity = this.engine.createEntity();
-                addEntityTransform(rectMapObj, entity);
-                addEntityPhysic(rectMapObj, entity);
+                Rectangle rect = rectMapObj.getRectangle();
+                addEntityTransform(
+                    rect.getX(), rect.getY(),
+                    rect.getWidth(), rect.getHeight(),
+                    1f, 1f,
+                    entity);
+                addEntityPhysic(
+                    rectMapObj,
+                    BodyDef.BodyType.StaticBody,
+                    tmpVec2.set(rect.getX(), rect.getY()).scl(GdxGame.UNIT_SCALE),
+                    entity);
                 this.engine.addEntity(entity);
             } else {
                 throw new GdxRuntimeException("Unsupported trigger: " + mapObject.getClass().getSimpleName());
@@ -73,42 +86,42 @@ public class TiledAshleySpawner {
     private void spawnEntityOf(TiledMapTileMapObject tileMapObject) {
         Entity entity = this.engine.createEntity();
 
-        addEntityTransform(tileMapObject, entity);
-        addEntityPhysic(tileMapObject.getTile().getObjects(), entity);
-        entity.add(new Graphic(tileMapObject.getTile().getTextureRegion(), Color.WHITE.cpy()));
+        TextureRegion textureRegion = tileMapObject.getTile().getTextureRegion();
+        addEntityTransform(
+            tileMapObject.getX(), tileMapObject.getY(),
+            textureRegion.getRegionWidth(), textureRegion.getRegionHeight(),
+            tileMapObject.getScaleX(), tileMapObject.getScaleY(),
+            entity);
+        addEntityPhysic(
+            tileMapObject.getTile().getObjects(),
+            BodyDef.BodyType.DynamicBody,
+            Vector2.Zero,
+            entity);
+        entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
 
         this.engine.addEntity(entity);
     }
 
-    private void addEntityPhysic(RectangleMapObject rectMapObj, Entity entity) {
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.StaticBody;
-        Transform transform = entity.getComponent(Transform.class);
-        bodyDef.position.set(transform.position());
-        bodyDef.fixedRotation = true;
+    private void addEntityPhysic(MapObject mapObject, BodyDef.BodyType bodyType, Vector2 relativeTo, Entity entity) {
+        if (tmpMapObjects.getCount() > 0) tmpMapObjects.remove(0);
 
-        Body body = this.physicWorld.createBody(bodyDef);
-        body.setUserData(entity);
-        FixtureDef fixtureDef = TiledPhysics.fixtureDefOfMapObject(rectMapObj, transform.scaling(), new Vector2(transform.position()));
-        body.createFixture(fixtureDef);
-        fixtureDef.shape.dispose();
-
-        entity.add(new Physic(body, new Vector2(body.getPosition())));
+        tmpMapObjects.add(mapObject);
+        addEntityPhysic(tmpMapObjects, bodyType, relativeTo, entity);
     }
 
-    private void addEntityPhysic(MapObjects objects, Entity entity) {
-        if (objects.getCount() == 0) return;
+    private void addEntityPhysic(MapObjects mapObjects, BodyDef.BodyType bodyType, Vector2 relativeTo, Entity entity) {
+        if (mapObjects.getCount() == 0) return;
 
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.type = bodyType;
         Transform transform = entity.getComponent(Transform.class);
         bodyDef.position.set(transform.position());
         bodyDef.fixedRotation = true;
 
         Body body = this.physicWorld.createBody(bodyDef);
         body.setUserData(entity);
-        for (MapObject object : objects) {
-            FixtureDef fixtureDef = TiledPhysics.fixtureDefOfMapObject(object, transform.scaling(), Vector2.Zero);
+        for (MapObject object : mapObjects) {
+            FixtureDef fixtureDef = TiledPhysics.fixtureDefOfMapObject(object, transform.scaling(), relativeTo);
             body.createFixture(fixtureDef);
             fixtureDef.shape.dispose();
         }
@@ -116,11 +129,15 @@ public class TiledAshleySpawner {
         entity.add(new Physic(body, new Vector2(body.getPosition())));
     }
 
-    private static void addEntityTransform(TiledMapTileMapObject tileMapObject, Entity entity) {
-        Vector2 position = new Vector2(tileMapObject.getX(), tileMapObject.getY());
-        TextureRegion textureRegion = tileMapObject.getTile().getTextureRegion();
-        Vector2 size = new Vector2(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
-        Vector2 scaling = new Vector2(tileMapObject.getScaleX(), tileMapObject.getScaleY());
+    private static void addEntityTransform(
+        float x, float y,
+        float w, float h,
+        float scaleX, float scaleY,
+        Entity entity
+    ) {
+        Vector2 position = new Vector2(x, y);
+        Vector2 size = new Vector2(w, h);
+        Vector2 scaling = new Vector2(scaleX, scaleY);
 
         position.scl(GdxGame.UNIT_SCALE);
         size.scl(GdxGame.UNIT_SCALE);
@@ -128,14 +145,4 @@ public class TiledAshleySpawner {
         entity.add(new Transform(position, 0, size, scaling, 0f));
     }
 
-    private void addEntityTransform(RectangleMapObject rectMapObj, Entity entity) {
-        Rectangle rect = rectMapObj.getRectangle();
-        Vector2 position = new Vector2(rect.getX(), rect.getY());
-        Vector2 size = new Vector2(rect.getWidth(), rect.getHeight());
-
-        position.scl(GdxGame.UNIT_SCALE);
-        size.scl(GdxGame.UNIT_SCALE);
-
-        entity.add(new Transform(position, 0, size, new Vector2(1f, 1f), 0f));
-    }
 }
