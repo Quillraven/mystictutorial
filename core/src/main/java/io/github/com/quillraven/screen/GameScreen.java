@@ -10,6 +10,8 @@ import com.badlogic.gdx.utils.Disposable;
 import io.github.com.quillraven.GdxGame;
 import io.github.com.quillraven.asset.MapAsset;
 import io.github.com.quillraven.system.AnimationSystem;
+import io.github.com.quillraven.system.FacingSystem;
+import io.github.com.quillraven.system.FsmSystem;
 import io.github.com.quillraven.system.PhysicDebugRenderSystem;
 import io.github.com.quillraven.system.PhysicMoveSystem;
 import io.github.com.quillraven.system.PhysicSystem;
@@ -36,6 +38,8 @@ public class GameScreen extends ScreenAdapter {
         // add ECS systems
         this.engine.addSystem(new PhysicMoveSystem());
         this.engine.addSystem(new PhysicSystem(physicWorld, 1 / 60f));
+        this.engine.addSystem(new FacingSystem());
+        this.engine.addSystem(new FsmSystem());
         this.engine.addSystem(new AnimationSystem(game.getAssetService()));
         this.engine.addSystem(new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera()));
         this.engine.addSystem(new TestSystem(this.tiledService));

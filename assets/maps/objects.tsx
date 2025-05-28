@@ -3,7 +3,7 @@
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
-   <property name="animation" value="WALK"/>
+   <property name="animation" value="IDLE"/>
    <property name="atlasAsset" value="OBJECTS"/>
    <property name="speed" type="float" value="2"/>
   </properties>

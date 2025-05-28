@@ -28,6 +28,7 @@ import io.github.com.quillraven.component.Animation2D;
 import io.github.com.quillraven.component.Animation2D.AnimationType;
 import io.github.com.quillraven.component.Facing;
 import io.github.com.quillraven.component.Facing.FacingDirection;
+import io.github.com.quillraven.component.Fsm;
 import io.github.com.quillraven.component.Graphic;
 import io.github.com.quillraven.component.Move;
 import io.github.com.quillraven.component.Physic;
@@ -127,6 +128,7 @@ public class TiledAshleySpawner {
         addEntityAnimation(tile, entity);
         addEntityMove(tile, entity);
         entity.add(new Facing(FacingDirection.DOWN));
+        entity.add(new Fsm(entity));
         entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
 
         this.engine.addEntity(entity);
