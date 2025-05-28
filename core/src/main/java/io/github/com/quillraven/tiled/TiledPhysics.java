@@ -24,7 +24,7 @@ public final class TiledPhysics {
     // relativeTo is necessary for map objects that are directly placed on a layer (like rectangles for trigger).
     // Their x/y is equal to the position of the object, but we need it relative to 0,0 like it
     // is in the collision editor of a tile.
-    public static FixtureDef fixtureDefOfMapObject(MapObject mapObject, Vector2 scaling, Vector2 relativeTo) {
+    public static FixtureDef fixtureDefOf(MapObject mapObject, Vector2 scaling, Vector2 relativeTo) {
         if (mapObject instanceof RectangleMapObject rectMapObj) {
             return rectangleFixtureDef(rectMapObj, scaling, relativeTo);
         } else if (mapObject instanceof EllipseMapObject ellipseMapObj) {

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.1-99-gec89c545" name="objects" tilewidth="64" tileheight="64" tilecount="1" columns="0">
+<tileset version="1.10" tiledversion="1.11.0" name="objects" tilewidth="64" tileheight="64" tilecount="1" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
    <property name="animation" value="WALK"/>
    <property name="atlasAsset" value="OBJECTS"/>
-   <property name="speed" type="float" value="5"/>
+   <property name="speed" type="float" value="2"/>
   </properties>
   <image source="objects/hero.png" width="64" height="64"/>
   <objectgroup draworder="index" id="3">

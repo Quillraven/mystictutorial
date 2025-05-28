@@ -29,6 +29,7 @@ import io.github.com.quillraven.component.Animation2D.AnimationType;
 import io.github.com.quillraven.component.Facing;
 import io.github.com.quillraven.component.Facing.FacingDirection;
 import io.github.com.quillraven.component.Graphic;
+import io.github.com.quillraven.component.Move;
 import io.github.com.quillraven.component.Physic;
 import io.github.com.quillraven.component.Transform;
 
@@ -110,23 +111,32 @@ public class TiledAshleySpawner {
 
     private void spawnEntityOf(TiledMapTileMapObject tileMapObject) {
         Entity entity = this.engine.createEntity();
+        TiledMapTile tile = tileMapObject.getTile();
+        TextureRegion textureRegion = tile.getTextureRegion();
 
-        TextureRegion textureRegion = tileMapObject.getTile().getTextureRegion();
         addEntityTransform(
             tileMapObject.getX(), tileMapObject.getY(),
             textureRegion.getRegionWidth(), textureRegion.getRegionHeight(),
             tileMapObject.getScaleX(), tileMapObject.getScaleY(),
             entity);
         addEntityPhysic(
-            tileMapObject.getTile().getObjects(),
+            tile.getObjects(),
             BodyType.DynamicBody,
             Vector2.Zero,
             entity);
-        addEntityAnimation(tileMapObject.getTile(), entity);
+        addEntityAnimation(tile, entity);
+        addEntityMove(tile, entity);
         entity.add(new Facing(FacingDirection.DOWN));
         entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
 
         this.engine.addEntity(entity);
+    }
+
+    private void addEntityMove(TiledMapTile tile, Entity entity) {
+        float speed = tile.getProperties().get("speed", 0f, Float.class);
+        if (speed == 0f) return;
+
+        entity.add(new Move(speed));
     }
 
     private void addEntityAnimation(TiledMapTile tile, Entity entity) {
@@ -179,7 +189,7 @@ public class TiledAshleySpawner {
         Body body = this.physicWorld.createBody(bodyDef);
         body.setUserData(userData);
         for (MapObject object : mapObjects) {
-            FixtureDef fixtureDef = TiledPhysics.fixtureDefOfMapObject(object, scaling, relativeTo);
+            FixtureDef fixtureDef = TiledPhysics.fixtureDefOf(object, scaling, relativeTo);
             body.createFixture(fixtureDef);
             fixtureDef.shape.dispose();
         }
