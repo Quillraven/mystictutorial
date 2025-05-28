@@ -1,7 +1,10 @@
 package io.github.com.quillraven.screen;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
@@ -9,6 +12,9 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import io.github.com.quillraven.GdxGame;
 import io.github.com.quillraven.asset.MapAsset;
+import io.github.com.quillraven.component.Controller;
+import io.github.com.quillraven.input.GameControllerState;
+import io.github.com.quillraven.input.KeyboardController;
 import io.github.com.quillraven.system.AnimationSystem;
 import io.github.com.quillraven.system.FacingSystem;
 import io.github.com.quillraven.system.FsmSystem;
@@ -16,19 +22,20 @@ import io.github.com.quillraven.system.PhysicDebugRenderSystem;
 import io.github.com.quillraven.system.PhysicMoveSystem;
 import io.github.com.quillraven.system.PhysicSystem;
 import io.github.com.quillraven.system.RenderSystem;
-import io.github.com.quillraven.system.TestSystem;
 import io.github.com.quillraven.tiled.TiledAshleySpawner;
 import io.github.com.quillraven.tiled.TiledService;
 
 import java.util.function.Consumer;
 
 public class GameScreen extends ScreenAdapter {
+    private final GdxGame game;
     private final TiledService tiledService;
     private final Engine engine;
     private final TiledAshleySpawner tiledAshleySpawner;
     private final World physicWorld;
 
     public GameScreen(GdxGame game) {
+        this.game = game;
         this.tiledService = new TiledService(game.getAssetService());
         this.physicWorld = new World(Vector2.Zero, true);
         this.physicWorld.setAutoClearForces(false);
@@ -42,12 +49,16 @@ public class GameScreen extends ScreenAdapter {
         this.engine.addSystem(new FsmSystem());
         this.engine.addSystem(new AnimationSystem(game.getAssetService()));
         this.engine.addSystem(new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera()));
-        this.engine.addSystem(new TestSystem(this.tiledService));
         this.engine.addSystem(new PhysicDebugRenderSystem(this.physicWorld, game.getCamera()));
     }
 
     @Override
     public void show() {
+        this.game.getInputMultiplexer().clear();
+        ImmutableArray<Entity> controllerEntities = this.engine.getEntitiesFor(Family.all(Controller.class).get());
+        GameControllerState gameControllerState = new GameControllerState(controllerEntities);
+        this.game.getInputMultiplexer().addProcessor(new KeyboardController(gameControllerState));
+
         Consumer<TiledMap> renderConsumer = this.engine.getSystem(RenderSystem.class)::setMap;
         Consumer<TiledMap> ashleySpawnerConsumer = this.tiledAshleySpawner::loadMapObjects;
         this.tiledService.setMapChangeConsumer(renderConsumer.andThen(ashleySpawnerConsumer));

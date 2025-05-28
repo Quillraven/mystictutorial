@@ -26,6 +26,7 @@ import io.github.com.quillraven.GdxGame;
 import io.github.com.quillraven.asset.AtlasAsset;
 import io.github.com.quillraven.component.Animation2D;
 import io.github.com.quillraven.component.Animation2D.AnimationType;
+import io.github.com.quillraven.component.Controller;
 import io.github.com.quillraven.component.Facing;
 import io.github.com.quillraven.component.Facing.FacingDirection;
 import io.github.com.quillraven.component.Fsm;
@@ -127,11 +128,19 @@ public class TiledAshleySpawner {
             entity);
         addEntityAnimation(tile, entity);
         addEntityMove(tile, entity);
+        addEntityController(tileMapObject, entity);
         entity.add(new Facing(FacingDirection.DOWN));
         entity.add(new Fsm(entity));
         entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
 
         this.engine.addEntity(entity);
+    }
+
+    private void addEntityController(TiledMapTileMapObject tileMapObject, Entity entity) {
+        boolean controller = tileMapObject.getProperties().get("controller", false, Boolean.class);
+        if (!controller) return;
+
+        entity.add(new Controller());
     }
 
     private void addEntityMove(TiledMapTile tile, Entity entity) {

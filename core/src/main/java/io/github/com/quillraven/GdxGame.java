@@ -3,6 +3,7 @@ package io.github.com.quillraven;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.GL20;
@@ -28,12 +29,15 @@ public class GdxGame extends Game {
     private OrthographicCamera camera;
     private Viewport viewport;
     private GLProfiler glProfiler;
+    private InputMultiplexer inputMultiplexer;
 
     private final HashMap<Class<? extends Screen>, Screen> screenCache = new HashMap<>();
 
     @Override
     public void create() {
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
+        inputMultiplexer = new InputMultiplexer();
+        Gdx.input.setInputProcessor(inputMultiplexer);
 
         batch = new SpriteBatch();
         assetService = new AssetService(new InternalFileHandleResolver());
@@ -107,5 +111,9 @@ public class GdxGame extends Game {
 
     public Viewport getViewport() {
         return viewport;
+    }
+
+    public InputMultiplexer getInputMultiplexer() {
+        return inputMultiplexer;
     }
 }
