@@ -10,5 +10,65 @@
     "properties": [
     ],
     "propertyTypes": [
+        {
+            "id": 2,
+            "name": "AtlasAsset",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "OBJECTS"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 3,
+            "members": [
+                {
+                    "name": "animation",
+                    "type": "string",
+                    "value": ""
+                },
+                {
+                    "name": "atlasAsset",
+                    "propertyType": "AtlasAsset",
+                    "type": "string",
+                    "value": "OBJECTS"
+                },
+                {
+                    "name": "speed",
+                    "type": "float",
+                    "value": 0
+                }
+            ],
+            "name": "Object",
+            "type": "class",
+            "useAs": [
+                "property",
+                "tile",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 1,
+            "members": [
+                {
+                    "name": "atlasAsset",
+                    "propertyType": "AtlasAsset",
+                    "type": "string",
+                    "value": "OBJECTS"
+                }
+            ],
+            "name": "Prop",
+            "type": "class",
+            "useAs": [
+                "property",
+                "tile",
+                "project"
+            ]
+        }
     ]
 }

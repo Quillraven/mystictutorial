@@ -115,6 +115,7 @@ public class TiledAshleySpawner {
         Entity entity = this.engine.createEntity();
         TiledMapTile tile = tileMapObject.getTile();
         TextureRegion textureRegion = tile.getTextureRegion();
+        String classType = tile.getProperties().get("type", "", String.class);
 
         addEntityTransform(
             tileMapObject.getX(), tileMapObject.getY(),
@@ -123,7 +124,7 @@ public class TiledAshleySpawner {
             entity);
         addEntityPhysic(
             tile.getObjects(),
-            BodyType.DynamicBody,
+            "Prop".equals(classType) ? BodyType.StaticBody : BodyType.DynamicBody,
             Vector2.Zero,
             entity);
         addEntityAnimation(tile, entity);
@@ -157,7 +158,7 @@ public class TiledAshleySpawner {
         }
         AnimationType animationType = AnimationType.valueOf(animationStr);
 
-        String atlasAssetStr = tile.getProperties().get("atlasAsset", "", String.class);
+        String atlasAssetStr = tile.getProperties().get("atlasAsset", "OBJECTS", String.class);
         AtlasAsset atlasAsset = AtlasAsset.valueOf(atlasAssetStr);
         FileTextureData textureData = (FileTextureData) tile.getTextureRegion().getTexture().getTextureData();
         String atlasKey = textureData.getFileHandle().nameWithoutExtension();
