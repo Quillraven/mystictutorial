@@ -4,7 +4,7 @@
  <tile id="1" type="Object">
   <properties>
    <property name="animation" value="IDLE"/>
-   <property name="speed" type="float" value="2"/>
+   <property name="speed" type="float" value="3.5"/>
   </properties>
   <image source="objects/player.png" width="32" height="32"/>
   <objectgroup draworder="index" id="2">
@@ -20,6 +20,9 @@
   </objectgroup>
  </tile>
  <tile id="3" type="Prop">
+  <properties>
+   <property name="sortOffsetY" type="int" value="8"/>
+  </properties>
   <image source="objects/oak_tree.png" width="64" height="80"/>
   <objectgroup draworder="index" id="2">
    <object id="2" x="24" y="63">

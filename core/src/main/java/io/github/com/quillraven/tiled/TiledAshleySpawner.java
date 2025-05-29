@@ -26,6 +26,7 @@ import io.github.com.quillraven.GdxGame;
 import io.github.com.quillraven.asset.AtlasAsset;
 import io.github.com.quillraven.component.Animation2D;
 import io.github.com.quillraven.component.Animation2D.AnimationType;
+import io.github.com.quillraven.component.CameraFollow;
 import io.github.com.quillraven.component.Controller;
 import io.github.com.quillraven.component.Facing;
 import io.github.com.quillraven.component.Facing.FacingDirection;
@@ -88,6 +89,7 @@ public class TiledAshleySpawner {
                     rect.getX(), rect.getY(),
                     rect.getWidth(), rect.getHeight(),
                     1f, 1f,
+                    0,
                     entity);
                 addEntityPhysic(
                     rectMapObj,
@@ -116,11 +118,14 @@ public class TiledAshleySpawner {
         TiledMapTile tile = tileMapObject.getTile();
         TextureRegion textureRegion = tile.getTextureRegion();
         String classType = tile.getProperties().get("type", "", String.class);
+        float sortOffsetY = tile.getProperties().get("sortOffsetY", 0, Integer.class);
+        sortOffsetY *= GdxGame.UNIT_SCALE;
 
         addEntityTransform(
             tileMapObject.getX(), tileMapObject.getY(),
             textureRegion.getRegionWidth(), textureRegion.getRegionHeight(),
             tileMapObject.getScaleX(), tileMapObject.getScaleY(),
+            sortOffsetY,
             entity);
         addEntityPhysic(
             tile.getObjects(),
@@ -130,11 +135,19 @@ public class TiledAshleySpawner {
         addEntityAnimation(tile, entity);
         addEntityMove(tile, entity);
         addEntityController(tileMapObject, entity);
+        addEntityCameraFollow(tileMapObject, entity);
         entity.add(new Facing(FacingDirection.DOWN));
         entity.add(new Fsm(entity));
         entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
 
         this.engine.addEntity(entity);
+    }
+
+    private void addEntityCameraFollow(TiledMapTileMapObject tileMapObject, Entity entity) {
+        boolean cameraFollow = tileMapObject.getProperties().get("camFollow", false, Boolean.class);
+        if (!cameraFollow) return;
+
+        entity.add(new CameraFollow());
     }
 
     private void addEntityController(TiledMapTileMapObject tileMapObject, Entity entity) {
@@ -212,6 +225,7 @@ public class TiledAshleySpawner {
         float x, float y,
         float w, float h,
         float scaleX, float scaleY,
+        float sortOffsetY,
         Entity entity
     ) {
         Vector2 position = new Vector2(x, y);
@@ -221,7 +235,7 @@ public class TiledAshleySpawner {
         position.scl(GdxGame.UNIT_SCALE);
         size.scl(GdxGame.UNIT_SCALE);
 
-        entity.add(new Transform(position, 0, size, scaling, 0f));
+        entity.add(new Transform(position, 0, size, scaling, 0f, sortOffsetY));
     }
 
 }

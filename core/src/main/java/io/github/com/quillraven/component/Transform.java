@@ -11,20 +11,23 @@ public class Transform implements Component, Comparable<Transform> {
     private final int z;
     private final Vector2 size;
     private final Vector2 scaling;
-    private final float rotationDeg;
+    private float rotationDeg;
+    private float sortOffsetY;
 
     public Transform(
         Vector2 position,
         int z,
         Vector2 size,
         Vector2 scaling,
-        float rotationDeg
+        float rotationDeg,
+        float sortOffsetY
     ) {
         this.position = position;
         this.z = z;
         this.size = size;
         this.scaling = scaling;
         this.rotationDeg = rotationDeg;
+        this.sortOffsetY = sortOffsetY;
     }
 
     @Override
@@ -32,8 +35,8 @@ public class Transform implements Component, Comparable<Transform> {
         if (this.z != other.z) {
             return Float.compare(this.z, other.z);
         }
-        if (this.position.y != other.position.y) {
-            return Float.compare(other.position.y, this.position.y);
+        if (this.position.y + this.sortOffsetY != other.position.y + other.sortOffsetY) {
+            return Float.compare(other.position.y + other.sortOffsetY, this.position.y + this.sortOffsetY);
         }
         return Float.compare(this.position.x, other.position.x);
     }

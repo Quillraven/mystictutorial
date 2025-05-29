@@ -16,6 +16,7 @@ import io.github.com.quillraven.component.Controller;
 import io.github.com.quillraven.input.GameControllerState;
 import io.github.com.quillraven.input.KeyboardController;
 import io.github.com.quillraven.system.AnimationSystem;
+import io.github.com.quillraven.system.CameraSystem;
 import io.github.com.quillraven.system.FacingSystem;
 import io.github.com.quillraven.system.FsmSystem;
 import io.github.com.quillraven.system.PhysicDebugRenderSystem;
@@ -48,6 +49,7 @@ public class GameScreen extends ScreenAdapter {
         this.engine.addSystem(new FacingSystem());
         this.engine.addSystem(new FsmSystem());
         this.engine.addSystem(new AnimationSystem(game.getAssetService()));
+        this.engine.addSystem(new CameraSystem(game.getCamera()));
         this.engine.addSystem(new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera()));
         this.engine.addSystem(new PhysicDebugRenderSystem(this.physicWorld, game.getCamera()));
     }
@@ -61,7 +63,8 @@ public class GameScreen extends ScreenAdapter {
 
         Consumer<TiledMap> renderConsumer = this.engine.getSystem(RenderSystem.class)::setMap;
         Consumer<TiledMap> ashleySpawnerConsumer = this.tiledAshleySpawner::loadMapObjects;
-        this.tiledService.setMapChangeConsumer(renderConsumer.andThen(ashleySpawnerConsumer));
+        Consumer<TiledMap> cameraConsumer = this.engine.getSystem(CameraSystem.class)::setMap;
+        this.tiledService.setMapChangeConsumer(renderConsumer.andThen(ashleySpawnerConsumer).andThen(cameraConsumer));
 
         TiledMap startMap = this.tiledService.loadMap(MapAsset.MAIN);
         this.tiledService.setMap(startMap);

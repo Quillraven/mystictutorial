@@ -20,8 +20,8 @@ import io.github.com.quillraven.screen.LoadingScreen;
 import java.util.HashMap;
 
 public class GdxGame extends Game {
-    public static final float WORLD_HEIGHT = 11f;
-    public static final float WORLD_WIDTH = 6f;
+    public static final float WORLD_HEIGHT = 9f;
+    public static final float WORLD_WIDTH = 16f;
     public static final float UNIT_SCALE = 1f / 16f;
 
     private Batch batch;

@@ -1,8 +1,7 @@
 package io.github.com.quillraven.asset;
 
 public enum MapAsset {
-    MAIN("mainmap.tmx"),
-    SECOND("secondmap.tmx");
+    MAIN("mainmap.tmx");
 
     private final String path;
 

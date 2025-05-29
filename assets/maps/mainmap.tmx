@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.11" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="18" height="16" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="11">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="18" height="16" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="11">
  <tileset firstgid="1" source="objects.tsx"/>
  <tileset firstgid="6" source="tileset.tsx"/>
  <layer id="1" name="ground" width="18" height="16">
@@ -31,6 +31,7 @@
   <object id="9" gid="5" x="32" y="32" width="16" height="16"/>
   <object id="10" gid="2" x="25" y="214" width="32" height="32">
    <properties>
+    <property name="camFollow" type="bool" value="true"/>
     <property name="controller" type="bool" value="true"/>
    </properties>
   </object>
