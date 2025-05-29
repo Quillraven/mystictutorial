@@ -22,7 +22,7 @@ import java.util.HashMap;
 public class GdxGame extends Game {
     public static final float WORLD_HEIGHT = 11f;
     public static final float WORLD_WIDTH = 6f;
-    public static final float UNIT_SCALE = 1f / 32f;
+    public static final float UNIT_SCALE = 1f / 16f;
 
     private Batch batch;
     private AssetService assetService;
@@ -76,7 +76,7 @@ public class GdxGame extends Game {
 
         super.render();
 
-        Gdx.graphics.setTitle("mystictutorial - Draw Calls: " + glProfiler.getDrawCalls());
+        Gdx.graphics.setTitle("Mystic Tutorial - Draw Calls: " + glProfiler.getDrawCalls());
     }
 
     @Override
