@@ -18,6 +18,7 @@ import io.github.com.quillraven.asset.AssetService;
 import io.github.com.quillraven.screen.LoadingScreen;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class GdxGame extends Game {
     public static final float WORLD_HEIGHT = 9f;
@@ -31,7 +32,7 @@ public class GdxGame extends Game {
     private GLProfiler glProfiler;
     private InputMultiplexer inputMultiplexer;
 
-    private final HashMap<Class<? extends Screen>, Screen> screenCache = new HashMap<>();
+    private final Map<Class<? extends Screen>, Screen> screenCache = new HashMap<>();
 
     @Override
     public void create() {

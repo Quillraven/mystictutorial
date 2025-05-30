@@ -34,6 +34,7 @@ public class GameScreen extends ScreenAdapter {
     private final Engine engine;
     private final TiledAshleySpawner tiledAshleySpawner;
     private final World physicWorld;
+    private final KeyboardController keyboardController;
 
     public GameScreen(GdxGame game) {
         this.game = game;
@@ -42,6 +43,8 @@ public class GameScreen extends ScreenAdapter {
         this.physicWorld.setAutoClearForces(false);
         this.engine = new Engine();
         this.tiledAshleySpawner = new TiledAshleySpawner(this.engine, this.physicWorld);
+        ImmutableArray<Entity> controllerEntities = this.engine.getEntitiesFor(Family.all(Controller.class).get());
+        this.keyboardController = new KeyboardController(GameControllerState.class, controllerEntities);
 
         // add ECS systems
         this.engine.addSystem(new PhysicMoveSystem());
@@ -57,9 +60,8 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void show() {
         this.game.getInputMultiplexer().clear();
-        ImmutableArray<Entity> controllerEntities = this.engine.getEntitiesFor(Family.all(Controller.class).get());
-        GameControllerState gameControllerState = new GameControllerState(controllerEntities);
-        this.game.getInputMultiplexer().addProcessor(new KeyboardController(gameControllerState));
+        this.game.getInputMultiplexer().addProcessor(keyboardController);
+        keyboardController.setActiveState(GameControllerState.class);
 
         Consumer<TiledMap> renderConsumer = this.engine.getSystem(RenderSystem.class)::setMap;
         Consumer<TiledMap> ashleySpawnerConsumer = this.tiledAshleySpawner::loadMapObjects;
