@@ -20,6 +20,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import io.github.com.quillraven.GdxGame;
@@ -61,6 +62,48 @@ public class TiledAshleySpawner {
                 loadTriggerLayer(layer);
             }
         }
+
+        spawnMapBoundary(tiledMap);
+    }
+
+    private void spawnMapBoundary(TiledMap tiledMap) {
+        // create four boxes for the map boundary (left, right, bottom and top edge)
+        int width = tiledMap.getProperties().get("width", 0, Integer.class);
+        int tileW = tiledMap.getProperties().get("tilewidth", 0, Integer.class);
+        int height = tiledMap.getProperties().get("height", 0, Integer.class);
+        int tileH = tiledMap.getProperties().get("tileheight", 0, Integer.class);
+        float mapW = width * tileW * GdxGame.UNIT_SCALE;
+        float mapH = height * tileH * GdxGame.UNIT_SCALE;
+        float halfW = mapW * 0.5f;
+        float halfH = mapH * 0.5f;
+        float boxThickness = 0.5f;
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyType.StaticBody;
+        bodyDef.position.setZero();
+        bodyDef.fixedRotation = true;
+        Body body = physicWorld.createBody(bodyDef);
+
+        // left edge
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(boxThickness, halfH, new Vector2(-boxThickness, halfH), 0f);
+        body.createFixture(shape, 0f).setFriction(0f);
+        shape.dispose();
+        // right edge
+        shape = new PolygonShape();
+        shape.setAsBox(boxThickness, halfH, new Vector2(mapW + boxThickness, halfH), 0f);
+        body.createFixture(shape, 0f).setFriction(0f);
+        shape.dispose();
+        // bottom edge
+        shape = new PolygonShape();
+        shape.setAsBox(halfW, boxThickness, new Vector2(halfW, -boxThickness), 0f);
+        body.createFixture(shape, 0f).setFriction(0f);
+        shape.dispose();
+        // top edge
+        shape = new PolygonShape();
+        shape.setAsBox(halfW, boxThickness, new Vector2(halfW, mapH + boxThickness), 0f);
+        body.createFixture(shape, 0f).setFriction(0f);
+        shape.dispose();
     }
 
     private void loadTileLayer(TiledMapTileLayer tileLayer) {
