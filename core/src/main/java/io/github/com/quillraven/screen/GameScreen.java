@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import io.github.com.quillraven.GdxGame;
 import io.github.com.quillraven.asset.MapAsset;
+import io.github.com.quillraven.audio.AudioService;
 import io.github.com.quillraven.component.Controller;
 import io.github.com.quillraven.input.GameControllerState;
 import io.github.com.quillraven.input.KeyboardController;
@@ -35,9 +36,11 @@ public class GameScreen extends ScreenAdapter {
     private final TiledAshleySpawner tiledAshleySpawner;
     private final World physicWorld;
     private final KeyboardController keyboardController;
+    private final AudioService audioService;
 
     public GameScreen(GdxGame game) {
         this.game = game;
+        this.audioService = game.getAudioService();
         this.tiledService = new TiledService(game.getAssetService());
         this.physicWorld = new World(Vector2.Zero, true);
         this.physicWorld.setAutoClearForces(false);
@@ -66,7 +69,10 @@ public class GameScreen extends ScreenAdapter {
         Consumer<TiledMap> renderConsumer = this.engine.getSystem(RenderSystem.class)::setMap;
         Consumer<TiledMap> ashleySpawnerConsumer = this.tiledAshleySpawner::loadMapObjects;
         Consumer<TiledMap> cameraConsumer = this.engine.getSystem(CameraSystem.class)::setMap;
-        this.tiledService.setMapChangeConsumer(renderConsumer.andThen(ashleySpawnerConsumer).andThen(cameraConsumer));
+        Consumer<TiledMap> audioConsumer = this.audioService::setMap;
+        this.tiledService.setMapChangeConsumer(
+            renderConsumer.andThen(ashleySpawnerConsumer).andThen(cameraConsumer).andThen(audioConsumer)
+        );
 
         TiledMap startMap = this.tiledService.loadMap(MapAsset.MAIN);
         this.tiledService.setMap(startMap);

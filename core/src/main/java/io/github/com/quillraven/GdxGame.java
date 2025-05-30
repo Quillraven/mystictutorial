@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.com.quillraven.asset.AssetService;
+import io.github.com.quillraven.audio.AudioService;
 import io.github.com.quillraven.screen.LoadingScreen;
 
 import java.util.HashMap;
@@ -27,6 +28,7 @@ public class GdxGame extends Game {
 
     private Batch batch;
     private AssetService assetService;
+    private AudioService audioService;
     private OrthographicCamera camera;
     private Viewport viewport;
     private GLProfiler glProfiler;
@@ -42,6 +44,7 @@ public class GdxGame extends Game {
 
         batch = new SpriteBatch();
         assetService = new AssetService(new InternalFileHandleResolver());
+        audioService = new AudioService(assetService);
         camera = new OrthographicCamera();
         viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
 
@@ -116,5 +119,9 @@ public class GdxGame extends Game {
 
     public InputMultiplexer getInputMultiplexer() {
         return inputMultiplexer;
+    }
+
+    public AudioService getAudioService() {
+        return audioService;
     }
 }

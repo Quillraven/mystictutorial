@@ -3,6 +3,7 @@ package io.github.com.quillraven.asset;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -34,6 +35,18 @@ public class AssetService implements Disposable {
 
     public TextureAtlas get(AtlasAsset atlasAsset) {
         return this.assetManager.get(atlasAsset.getPath(), TextureAtlas.class);
+    }
+
+    public Music load(MusicAsset musicAsset) {
+        String path = musicAsset.getPath();
+        this.assetManager.load(path, Music.class);
+        this.assetManager.finishLoading();
+        return this.assetManager.get(path, Music.class);
+    }
+
+    public void unload(MusicAsset musicAsset) {
+        this.assetManager.unload(musicAsset.getPath());
+        this.assetManager.finishLoading();
     }
 
     public boolean update() {

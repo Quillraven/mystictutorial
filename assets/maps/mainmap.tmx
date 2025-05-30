@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="18" height="16" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="11">
+ <properties>
+  <property name="music" value="TOWN"/>
+ </properties>
  <tileset firstgid="1" source="objects.tsx"/>
  <tileset firstgid="6" source="tileset.tsx"/>
  <layer id="1" name="ground" width="18" height="16">
