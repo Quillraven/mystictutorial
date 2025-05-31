@@ -8,6 +8,10 @@ dependencies {
   api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
   api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
   api "com.badlogicgames.gdx:gdx:$gdxVersion"
+  // freetype font support for skins
+  api "com.github.raeleus.stripe:freetype:$stripeVersion"
+  // ten patch for better ProgressBar support (scene2d)
+  api "com.github.raeleus.TenPatch:tenpatch:$tenPatchVersion"
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"

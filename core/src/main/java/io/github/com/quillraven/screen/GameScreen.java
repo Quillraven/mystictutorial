@@ -5,6 +5,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
@@ -79,9 +81,19 @@ public class GameScreen extends ScreenAdapter {
     }
 
     @Override
+    public void hide() {
+        this.engine.removeAllEntities();
+    }
+
+    @Override
     public void render(float delta) {
         delta = Math.min(1 / 30f, delta);
         engine.update(delta);
+
+        // TODO refactor
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            this.game.setScreen(MenuScreen.class);
+        }
     }
 
     @Override

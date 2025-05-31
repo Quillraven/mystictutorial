@@ -1,0 +1,44 @@
+
+skin.png
+size: 1024, 1024
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+banner
+  rotate: false
+  xy: 4, 602
+  size: 632, 164
+  orig: 632, 164
+  offset: 0, 0
+  index: -1
+bar
+  rotate: false
+  xy: 4, 461
+  size: 107, 8
+  orig: 107, 8
+  offset: 0, 0
+  index: -1
+bar_frame
+  rotate: false
+  xy: 644, 750
+  size: 130, 16
+  split: 3, 3, 3, 2
+  orig: 130, 16
+  offset: 0, 0
+  index: -1
+button
+  rotate: false
+  xy: 141, 578
+  size: 32, 16
+  split: 5, 5, 8, 6
+  orig: 32, 16
+  offset: 0, 0
+  index: -1
+frame
+  rotate: false
+  xy: 4, 477
+  size: 129, 117
+  split: 46, 49, 30, 54
+  orig: 129, 117
+  offset: 0, 0
+  index: -1

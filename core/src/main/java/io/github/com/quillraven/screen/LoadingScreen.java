@@ -5,6 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import io.github.com.quillraven.GdxGame;
 import io.github.com.quillraven.asset.AssetService;
 import io.github.com.quillraven.asset.AtlasAsset;
+import io.github.com.quillraven.asset.SkinAsset;
 
 public class LoadingScreen extends ScreenAdapter {
 
@@ -21,6 +22,7 @@ public class LoadingScreen extends ScreenAdapter {
         for (AtlasAsset atlasAsset : AtlasAsset.values()) {
             assetService.queue(atlasAsset);
         }
+        assetService.queue(SkinAsset.DEFAULT);
     }
 
     @Override
@@ -30,11 +32,12 @@ public class LoadingScreen extends ScreenAdapter {
             createScreens();
             this.game.removeScreen(this);
             this.dispose();
-            this.game.setScreen(GameScreen.class);
+            this.game.setScreen(MenuScreen.class);
         }
     }
 
     private void createScreens() {
         this.game.addScreen(new GameScreen(this.game));
+        this.game.addScreen(new MenuScreen(this.game));
     }
 }
