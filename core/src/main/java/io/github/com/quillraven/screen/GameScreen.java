@@ -47,7 +47,7 @@ public class GameScreen extends ScreenAdapter {
         this.physicWorld = new World(Vector2.Zero, true);
         this.physicWorld.setAutoClearForces(false);
         this.engine = new Engine();
-        this.tiledAshleySpawner = new TiledAshleySpawner(this.engine, this.physicWorld);
+        this.tiledAshleySpawner = new TiledAshleySpawner(this.engine, this.physicWorld, this.game.getAssetService());
         ImmutableArray<Entity> controllerEntities = this.engine.getEntitiesFor(Family.all(Controller.class).get());
         this.keyboardController = new KeyboardController(GameControllerState.class, controllerEntities);
 

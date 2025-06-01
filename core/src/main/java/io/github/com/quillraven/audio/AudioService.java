@@ -2,6 +2,7 @@ package io.github.com.quillraven.audio;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.MathUtils;
 import io.github.com.quillraven.asset.AssetService;
 import io.github.com.quillraven.asset.MusicAsset;
 
@@ -10,11 +11,34 @@ public class AudioService {
     private final AssetService assetService;
     private Music currentMusic;
     private MusicAsset currentMusicAsset;
+    private float musicVolume;
+    private float soundVolume;
 
     public AudioService(AssetService assetService) {
         this.assetService = assetService;
         this.currentMusic = null;
         this.currentMusicAsset = null;
+        this.musicVolume = 0.5f;
+        this.soundVolume = 0.33f;
+    }
+
+    public void setMusicVolume(float volume) {
+        this.musicVolume = MathUtils.clamp(volume, 0f, 1f);
+        if (this.currentMusic != null) {
+            this.currentMusic.setVolume(volume);
+        }
+    }
+
+    public float getMusicVolume() {
+        return musicVolume;
+    }
+
+    public void setSoundVolume(float soundVolume) {
+        this.soundVolume = MathUtils.clamp(soundVolume, 0f, 1f);
+    }
+
+    public float getSoundVolume() {
+        return soundVolume;
     }
 
     public void playMusic(MusicAsset musicAsset) {
