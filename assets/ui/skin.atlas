@@ -28,7 +28,7 @@ bar_frame
   index: -1
 button
   rotate: false
-  xy: 141, 578
+  xy: 644, 726
   size: 32, 16
   split: 5, 5, 8, 6
   orig: 32, 16
@@ -40,5 +40,13 @@ frame
   size: 129, 117
   split: 46, 49, 30, 54
   orig: 129, 117
+  offset: 0, 0
+  index: -1
+selection
+  rotate: false
+  xy: 141, 569
+  size: 24, 25
+  split: 8, 8, 9, 9
+  orig: 24, 25
   offset: 0, 0
   index: -1

@@ -1,12 +1,11 @@
 package io.github.com.quillraven.asset;
 
-public enum MusicAsset {
-    TOWN("town.ogg"),
-    MENU("menu.ogg");
+public enum SoundAsset {
+    SWORD_HIT("sword_hit.wav");
 
     private final String path;
 
-    MusicAsset(String musicFile) {
+    SoundAsset(String musicFile) {
         this.path = "audio/" + musicFile;
     }
 

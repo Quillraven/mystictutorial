@@ -6,6 +6,7 @@ import io.github.com.quillraven.GdxGame;
 import io.github.com.quillraven.asset.AssetService;
 import io.github.com.quillraven.asset.AtlasAsset;
 import io.github.com.quillraven.asset.SkinAsset;
+import io.github.com.quillraven.asset.SoundAsset;
 
 public class LoadingScreen extends ScreenAdapter {
 
@@ -23,6 +24,9 @@ public class LoadingScreen extends ScreenAdapter {
             assetService.queue(atlasAsset);
         }
         assetService.queue(SkinAsset.DEFAULT);
+        for (SoundAsset soundAsset : SoundAsset.values()) {
+            assetService.queue(soundAsset);
+        }
     }
 
     @Override

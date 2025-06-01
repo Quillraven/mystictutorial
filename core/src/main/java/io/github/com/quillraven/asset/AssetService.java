@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -58,6 +59,14 @@ public class AssetService implements Disposable {
 
     public Skin get(SkinAsset skinAsset) {
         return this.assetManager.get(skinAsset.getPath(), Skin.class);
+    }
+
+    public void queue(SoundAsset soundAsset) {
+        this.assetManager.load(soundAsset.getPath(), Sound.class);
+    }
+
+    public Sound get(SoundAsset soundAsset) {
+        return this.assetManager.get(soundAsset.getPath(), Sound.class);
     }
 
     public boolean update() {

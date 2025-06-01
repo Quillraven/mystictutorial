@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.com.quillraven.GdxGame;
+import io.github.com.quillraven.asset.MusicAsset;
 import io.github.com.quillraven.asset.SkinAsset;
 import io.github.com.quillraven.ui.model.MenuViewModel;
 import io.github.com.quillraven.ui.view.MenuView;
@@ -38,6 +39,7 @@ public class MenuScreen extends ScreenAdapter {
         this.inputMultiplexer.addProcessor(stage);
 
         this.stage.addActor(new MenuView(stage, skin, new MenuViewModel(game)));
+        this.game.getAudioService().playMusic(MusicAsset.MENU);
     }
 
     @Override

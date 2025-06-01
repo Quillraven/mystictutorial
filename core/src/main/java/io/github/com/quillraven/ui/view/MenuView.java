@@ -1,19 +1,53 @@
 package io.github.com.quillraven.ui.view;
 
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import io.github.com.quillraven.ui.model.MenuViewModel;
 
 public class MenuView extends View<MenuViewModel> {
+    private final Image selectionImg;
 
     public MenuView(Stage stage, Skin skin, MenuViewModel viewModel) {
         super(stage, skin, viewModel);
+
+        this.selectionImg = new Image(skin, "selection");
+        this.selectionImg.setTouchable(Touchable.disabled);
+        selectMenuItem(this.findActor("startGameBtn"));
+    }
+
+    private void selectMenuItem(Group menuItem) {
+        if (selectionImg.getParent() != null) {
+            selectionImg.getParent().removeActor(selectionImg);
+        }
+
+        float extraSize = 7f;
+        float halfExtraSize = extraSize * 0.5f;
+        float resizeTime = 0.2f;
+
+        menuItem.addActor(selectionImg);
+        selectionImg.setPosition(-halfExtraSize, -halfExtraSize);
+        selectionImg.setSize(menuItem.getWidth() + extraSize, menuItem.getHeight() + extraSize);
+        selectionImg.clearActions();
+        selectionImg.addAction(Actions.forever(Actions.sequence(
+            Actions.parallel(
+                Actions.sizeBy(extraSize, extraSize, resizeTime, Interpolation.linear),
+                Actions.moveBy(-halfExtraSize, -halfExtraSize, resizeTime, Interpolation.linear)
+            ),
+            Actions.parallel(
+                Actions.sizeBy(-extraSize, -extraSize, resizeTime, Interpolation.linear),
+                Actions.moveBy(halfExtraSize, halfExtraSize, resizeTime, Interpolation.linear)
+            )
+        )));
     }
 
     @Override
@@ -39,32 +73,37 @@ public class MenuView extends View<MenuViewModel> {
         contentTable.padBottom(20.0f);
 
         TextButton textButton = new TextButton("Start Game", skin);
-        onClick(textButton, ((event, x, y) -> viewModel.startGame()));
+        textButton.setName("startGameBtn");
+        onClick(textButton, viewModel::startGame);
+        onEnter(textButton, this::selectMenuItem);
         contentTable.add(textButton).row();
 
-        ProgressBar musicBar = setupVolumeBar(contentTable, "Music Volume", viewModel.getMusicVolume());
-        viewModel.addPropertyChangeListener(MenuViewModel.MUSIC_VOLUME_PROPERTY, (event) ->
-            musicBar.setValue((Float) event.getNewValue())
-        );
-        setupVolumeBar(contentTable, "Sound Volume", viewModel.getSoundVolume());
+        Slider musicSlider = setupVolumeSlider(contentTable, "Music Volume", viewModel.getMusicVolume());
+        onChange(musicSlider, (slider) -> viewModel.setMusicVolume(slider.getValue()));
+
+        Slider soundSlider = setupVolumeSlider(contentTable, "Sound Volume", viewModel.getSoundVolume());
+        onChange(soundSlider, (slider) -> viewModel.setSoundVolume(slider.getValue()));
 
         textButton = new TextButton("Quit Game", skin);
-        onClick(textButton, ((event, x, y) -> viewModel.quitGame()));
+        onClick(textButton, viewModel::quitGame);
+        onEnter(textButton, this::selectMenuItem);
         contentTable.add(textButton).padTop(10.0f);
 
         add(contentTable).align(Align.top).expandY().padTop(20f).row();
     }
 
-    private ProgressBar setupVolumeBar(Table contentTable, String title, float initialValue) {
+    private Slider setupVolumeSlider(Table contentTable, String title, float initialValue) {
         Table table = new Table();
         Label label = new Label(title, skin);
         label.setColor(skin.getColor("sand"));
         table.add(label).row();
 
-        ProgressBar progressBar = new ProgressBar(0.0f, 1f, 0.05f, false, skin);
-        progressBar.setValue(initialValue);
-        table.add(progressBar).fill();
+        Slider slider = new Slider(0.0f, 1f, 0.05f, false, skin);
+        slider.setValue(initialValue);
+        table.add(slider);
         contentTable.add(table).padTop(10.0f).row();
-        return progressBar;
+
+        onEnter(table, this::selectMenuItem);
+        return slider;
     }
 }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.MathUtils;
 import io.github.com.quillraven.asset.AssetService;
 import io.github.com.quillraven.asset.MusicAsset;
+import io.github.com.quillraven.asset.SoundAsset;
 
 public class AudioService {
 
@@ -55,6 +56,10 @@ public class AudioService {
         this.currentMusic.setLooping(true);
         this.currentMusic.play();
         this.currentMusicAsset = musicAsset;
+    }
+
+    public void playSound(SoundAsset soundAsset) {
+        this.assetService.get(soundAsset).play(this.soundVolume);
     }
 
     public void setMap(TiledMap tiledMap) {
