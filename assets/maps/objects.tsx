@@ -19,21 +19,18 @@
    <object id="1" x="7" y="82" width="67" height="26"/>
   </objectgroup>
  </tile>
- <tile id="3" type="Prop">
-  <properties>
-   <property name="sortOffsetY" type="int" value="8"/>
-  </properties>
-  <image source="objects/oak_tree.png" width="64" height="80"/>
-  <objectgroup draworder="index" id="2">
-   <object id="2" x="24" y="63">
-    <polygon points="0,0 6,1 11,1 16,-1 16,-2 13,-6 13,-12 3,-12 3,-6 2,-5 1,-3"/>
-   </object>
-  </objectgroup>
- </tile>
  <tile id="4" type="Prop">
   <image source="objects/chest.png" width="16" height="16"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="0" y="4" width="16" height="10"/>
+  </objectgroup>
+ </tile>
+ <tile id="5" type="Prop">
+  <image source="objects/oak_tree.png" width="41" height="63"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="13" y="54">
+    <polygon points="0,0 6,1 11,1 16,-1 16,-2 14,-5 13,-13 3,-13 3,-6 2,-5 1,-3 0,-1"/>
+   </object>
   </objectgroup>
  </tile>
 </tileset>

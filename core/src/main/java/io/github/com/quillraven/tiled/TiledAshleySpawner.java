@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.maps.MapLayer;
@@ -24,6 +25,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import io.github.com.quillraven.GdxGame;
+import io.github.com.quillraven.asset.AssetService;
 import io.github.com.quillraven.asset.AtlasAsset;
 import io.github.com.quillraven.component.Animation2D;
 import io.github.com.quillraven.component.Animation2D.AnimationType;
@@ -44,12 +46,14 @@ public class TiledAshleySpawner {
     private final World physicWorld;
     private final MapObjects tmpMapObjects;
     private final Vector2 tmpVec2;
+    private final AssetService assetService;
 
-    public TiledAshleySpawner(Engine engine, World physicWorld) {
+    public TiledAshleySpawner(Engine engine, World physicWorld, AssetService assetService) {
         this.engine = engine;
         this.physicWorld = physicWorld;
         this.tmpMapObjects = new MapObjects();
         this.tmpVec2 = new Vector2();
+        this.assetService = assetService;
     }
 
     public void loadMapObjects(TiledMap tiledMap) {
@@ -159,7 +163,7 @@ public class TiledAshleySpawner {
     private void spawnEntityOf(TiledMapTileMapObject tileMapObject) {
         Entity entity = this.engine.createEntity();
         TiledMapTile tile = tileMapObject.getTile();
-        TextureRegion textureRegion = tile.getTextureRegion();
+        TextureRegion textureRegion = getTextureRegion(tile);
         String classType = tile.getProperties().get("type", "", String.class);
         float sortOffsetY = tile.getProperties().get("sortOffsetY", 0, Integer.class);
         sortOffsetY *= GdxGame.UNIT_SCALE;
@@ -184,6 +188,24 @@ public class TiledAshleySpawner {
         entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
 
         this.engine.addEntity(entity);
+    }
+
+    private TextureRegion getTextureRegion(TiledMapTile tile) {
+        String atlasAssetStr = tile.getProperties().get("atlasAsset", "OBJECTS", String.class);
+        AtlasAsset atlasAsset = AtlasAsset.valueOf(atlasAssetStr);
+        FileTextureData textureData = (FileTextureData) tile.getTextureRegion().getTexture().getTextureData();
+        String atlasKey = textureData.getFileHandle().nameWithoutExtension();
+        TextureAtlas textureAtlas = assetService.get(atlasAsset);
+        TextureAtlas.AtlasRegion region = textureAtlas.findRegion(atlasKey + "/" + atlasKey);
+        if (region != null) {
+            return region;
+        }
+
+        // Region not part of an atlas, or the object has an animation.
+        // If it has an animation, then its region is updated in the AnimationSystem.
+        // If it has no region, then we render the region of the Tiled editor to show something, but
+        // that will add one render call due to texture swapping.
+        return tile.getTextureRegion();
     }
 
     private void addEntityCameraFollow(TiledMapTileMapObject tileMapObject, Entity entity) {
