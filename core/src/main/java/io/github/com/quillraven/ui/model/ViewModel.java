@@ -2,7 +2,6 @@ package io.github.com.quillraven.ui.model;
 
 import io.github.com.quillraven.GdxGame;
 
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 public abstract class ViewModel {
@@ -14,7 +13,14 @@ public abstract class ViewModel {
         this.propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
-    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-        this.propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+    public <T> void onPropertyChange(String propertyName, Class<T> propType, OnPropertyChange<T> consumer) {
+        this.propertyChangeSupport.addPropertyChangeListener(propertyName, evt ->
+            consumer.onChange(propType.cast(evt.getNewValue()))
+        );
+    }
+
+    @FunctionalInterface
+    public interface OnPropertyChange<T> {
+        void onChange(T value);
     }
 }

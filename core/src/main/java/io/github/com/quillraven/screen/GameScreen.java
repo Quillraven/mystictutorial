@@ -3,12 +3,18 @@ package io.github.com.quillraven.screen;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.com.quillraven.GdxGame;
 import io.github.com.quillraven.asset.MapAsset;
+import io.github.com.quillraven.asset.SkinAsset;
 import io.github.com.quillraven.audio.AudioService;
 import io.github.com.quillraven.input.GameControllerState;
 import io.github.com.quillraven.input.KeyboardController;
@@ -17,17 +23,24 @@ import io.github.com.quillraven.system.CameraSystem;
 import io.github.com.quillraven.system.ControllerSystem;
 import io.github.com.quillraven.system.FacingSystem;
 import io.github.com.quillraven.system.FsmSystem;
+import io.github.com.quillraven.system.LifeSystem;
 import io.github.com.quillraven.system.PhysicDebugRenderSystem;
 import io.github.com.quillraven.system.PhysicMoveSystem;
 import io.github.com.quillraven.system.PhysicSystem;
 import io.github.com.quillraven.system.RenderSystem;
 import io.github.com.quillraven.tiled.TiledAshleySpawner;
 import io.github.com.quillraven.tiled.TiledService;
+import io.github.com.quillraven.ui.model.GameViewModel;
+import io.github.com.quillraven.ui.view.GameView;
 
 import java.util.function.Consumer;
 
 public class GameScreen extends ScreenAdapter {
     private final GdxGame game;
+    private final Stage stage;
+    private final Skin skin;
+    private final GameViewModel viewModel;
+    private final Viewport uiViewport;
     private final TiledService tiledService;
     private final Engine engine;
     private final TiledAshleySpawner tiledAshleySpawner;
@@ -37,6 +50,10 @@ public class GameScreen extends ScreenAdapter {
 
     public GameScreen(GdxGame game) {
         this.game = game;
+        this.uiViewport = new FitViewport(320f, 180f);
+        this.stage = new Stage(uiViewport, game.getBatch());
+        this.skin = game.getAssetService().get(SkinAsset.DEFAULT);
+        this.viewModel = new GameViewModel(game);
         this.audioService = game.getAudioService();
         this.tiledService = new TiledService(game.getAssetService());
         this.physicWorld = new World(Vector2.Zero, true);
@@ -50,6 +67,7 @@ public class GameScreen extends ScreenAdapter {
         this.engine.addSystem(new PhysicSystem(physicWorld, 1 / 60f));
         this.engine.addSystem(new FacingSystem());
         this.engine.addSystem(new FsmSystem());
+        this.engine.addSystem(new LifeSystem(this.viewModel));
         this.engine.addSystem(new AnimationSystem(game.getAssetService()));
         this.engine.addSystem(new CameraSystem(game.getCamera()));
         this.engine.addSystem(new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera()));
@@ -59,9 +77,10 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-        this.game.getInputMultiplexer().clear();
-        this.game.getInputMultiplexer().addProcessor(keyboardController);
+        this.game.setInputProcessors(stage, keyboardController);
         keyboardController.setActiveState(GameControllerState.class);
+
+        this.stage.addActor(new GameView(stage, skin, this.viewModel));
 
         Consumer<TiledMap> renderConsumer = this.engine.getSystem(RenderSystem.class)::setMap;
         Consumer<TiledMap> ashleySpawnerConsumer = this.tiledAshleySpawner::loadMapObjects;
@@ -81,9 +100,20 @@ public class GameScreen extends ScreenAdapter {
     }
 
     @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        uiViewport.update(width, height, true);
+    }
+
+    @Override
     public void render(float delta) {
         delta = Math.min(1 / 30f, delta);
         engine.update(delta);
+
+        uiViewport.apply();
+        stage.getBatch().setColor(Color.WHITE);
+        stage.act(delta);
+        stage.draw();
     }
 
     @Override

@@ -6,21 +6,21 @@ filter: Nearest, Nearest
 repeat: none
 banner
   rotate: false
-  xy: 4, 602
+  xy: 4, 626
   size: 632, 164
   orig: 632, 164
   offset: 0, 0
   index: -1
 bar
   rotate: false
-  xy: 4, 461
+  xy: 4, 485
   size: 107, 8
   orig: 107, 8
   offset: 0, 0
   index: -1
 bar_frame
   rotate: false
-  xy: 644, 750
+  xy: 644, 774
   size: 130, 16
   split: 3, 3, 3, 2
   orig: 130, 16
@@ -28,7 +28,7 @@ bar_frame
   index: -1
 button
   rotate: false
-  xy: 644, 726
+  xy: 644, 750
   size: 32, 16
   split: 5, 5, 8, 6
   orig: 32, 16
@@ -36,15 +36,50 @@ button
   index: -1
 frame
   rotate: false
-  xy: 4, 477
+  xy: 4, 501
   size: 129, 117
   split: 46, 49, 30, 54
   orig: 129, 117
   offset: 0, 0
   index: -1
-selection
+life_00
+  rotate: false
+  xy: 782, 774
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+life_01
+  rotate: false
+  xy: 4, 461
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+life_02
   rotate: false
   xy: 141, 569
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+life_03
+  rotate: false
+  xy: 173, 602
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+life_04
+  rotate: false
+  xy: 644, 726
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+selection
+  rotate: false
+  xy: 141, 593
   size: 24, 25
   split: 8, 8, 9, 9
   orig: 24, 25

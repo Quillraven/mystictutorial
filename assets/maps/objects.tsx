@@ -4,6 +4,8 @@
  <tile id="1" type="Object">
   <properties>
    <property name="animation" value="IDLE"/>
+   <property name="life" type="int" value="12"/>
+   <property name="lifeReg" type="float" value="0.25"/>
    <property name="speed" type="float" value="3.5"/>
   </properties>
   <image source="objects/player.png" width="32" height="32"/>

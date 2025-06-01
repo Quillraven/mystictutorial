@@ -35,8 +35,10 @@ import io.github.com.quillraven.component.Facing;
 import io.github.com.quillraven.component.Facing.FacingDirection;
 import io.github.com.quillraven.component.Fsm;
 import io.github.com.quillraven.component.Graphic;
+import io.github.com.quillraven.component.Life;
 import io.github.com.quillraven.component.Move;
 import io.github.com.quillraven.component.Physic;
+import io.github.com.quillraven.component.Player;
 import io.github.com.quillraven.component.Transform;
 
 public class TiledAshleySpawner {
@@ -183,11 +185,27 @@ public class TiledAshleySpawner {
         addEntityMove(tile, entity);
         addEntityController(tileMapObject, entity);
         addEntityCameraFollow(tileMapObject, entity);
+        addEntityLife(tile, entity);
+        addEntityPlayer(tileMapObject, entity);
         entity.add(new Facing(FacingDirection.DOWN));
         entity.add(new Fsm(entity));
         entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
 
         this.engine.addEntity(entity);
+    }
+
+    private void addEntityPlayer(TiledMapTileMapObject tileMapObject, Entity entity) {
+        if ("Player".equals(tileMapObject.getName())) {
+            entity.add(new Player());
+        }
+    }
+
+    private void addEntityLife(TiledMapTile tile, Entity entity) {
+        int life = tile.getProperties().get("life", 0, Integer.class);
+        if (life == 0) return;
+
+        float lifeReg = tile.getProperties().get("lifeReg", 0f, Float.class);
+        entity.add(new Life(life, lifeReg));
     }
 
     private TextureRegion getTextureRegion(TiledMapTile tile) {

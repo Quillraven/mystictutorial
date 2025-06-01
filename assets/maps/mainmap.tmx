@@ -19,7 +19,7 @@
  <objectgroup id="5" name="objects">
   <object id="5" gid="3" x="197" y="118" width="80" height="112"/>
   <object id="9" gid="5" x="32" y="32" width="16" height="16"/>
-  <object id="10" gid="2" x="25" y="214" width="32" height="32">
+  <object id="10" name="Player" gid="2" x="25" y="214" width="32" height="32">
    <properties>
     <property name="camFollow" type="bool" value="true"/>
     <property name="controller" type="bool" value="true"/>

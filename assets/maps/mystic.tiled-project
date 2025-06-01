@@ -37,6 +37,16 @@
                     "value": "OBJECTS"
                 },
                 {
+                    "name": "life",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "lifeReg",
+                    "type": "float",
+                    "value": 0
+                },
+                {
                     "name": "speed",
                     "type": "float",
                     "value": 0

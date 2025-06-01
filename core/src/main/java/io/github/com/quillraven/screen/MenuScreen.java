@@ -1,7 +1,7 @@
 package io.github.com.quillraven.screen;
 
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -20,7 +20,6 @@ public class MenuScreen extends ScreenAdapter {
     private final Stage stage;
     private final Skin skin;
     private final Viewport uiViewport;
-    private final InputMultiplexer inputMultiplexer;
     private final KeyboardController keyboardController;
 
     public MenuScreen(GdxGame game) {
@@ -29,7 +28,6 @@ public class MenuScreen extends ScreenAdapter {
         this.stage = new Stage(uiViewport, game.getBatch());
         this.skin = game.getAssetService().get(SkinAsset.DEFAULT);
         this.keyboardController = new KeyboardController(UiControllerState.class, null, stage);
-        this.inputMultiplexer = game.getInputMultiplexer();
     }
 
     @Override
@@ -39,9 +37,7 @@ public class MenuScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-        this.inputMultiplexer.clear();
-        this.inputMultiplexer.addProcessor(stage);
-        this.inputMultiplexer.addProcessor(keyboardController);
+        this.game.setInputProcessors(stage, keyboardController);
 
         this.stage.addActor(new MenuView(stage, skin, new MenuViewModel(game)));
         this.game.getAudioService().playMusic(MusicAsset.MENU);
@@ -54,6 +50,8 @@ public class MenuScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        uiViewport.apply();
+        stage.getBatch().setColor(Color.WHITE);
         stage.act(delta);
         stage.draw();
     }
