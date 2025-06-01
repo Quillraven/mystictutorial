@@ -1,6 +1,8 @@
 package io.github.com.quillraven.ui.view;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -8,9 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import io.github.com.quillraven.input.UiEvent;
 import io.github.com.quillraven.ui.model.ViewModel;
 
-public abstract class View<T extends ViewModel> extends Table {
+public abstract class View<T extends ViewModel> extends Table implements EventListener {
 
     protected final Stage stage;
     protected final Skin skin;
@@ -21,10 +24,42 @@ public abstract class View<T extends ViewModel> extends Table {
         this.stage = stage;
         this.skin = skin;
         this.viewModel = viewModel;
+        this.stage.addListener(this);
         setupUI();
     }
 
     protected abstract void setupUI();
+
+    public void onLeft() {
+    }
+
+    public void onRight() {
+    }
+
+    public void onUp() {
+    }
+
+    public void onDown() {
+    }
+
+    public void onSelect() {
+    }
+
+    @Override
+    public boolean handle(Event event) {
+        if (event instanceof UiEvent uiEvent) {
+            switch (uiEvent.getCommand()) {
+                case LEFT -> onLeft();
+                case RIGHT -> onRight();
+                case UP -> onUp();
+                case DOWN -> onDown();
+                case SELECT -> onSelect();
+            }
+            return true;
+        }
+
+        return false;
+    }
 
     public static void onClick(Actor actor, OnEventConsumer consumer) {
         actor.addListener(new ClickListener() {

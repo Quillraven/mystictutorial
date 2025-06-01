@@ -1,10 +1,7 @@
 package io.github.com.quillraven.screen;
 
 import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
@@ -15,7 +12,6 @@ import com.badlogic.gdx.utils.Disposable;
 import io.github.com.quillraven.GdxGame;
 import io.github.com.quillraven.asset.MapAsset;
 import io.github.com.quillraven.audio.AudioService;
-import io.github.com.quillraven.component.Controller;
 import io.github.com.quillraven.input.GameControllerState;
 import io.github.com.quillraven.input.KeyboardController;
 import io.github.com.quillraven.system.AnimationSystem;
@@ -48,8 +44,7 @@ public class GameScreen extends ScreenAdapter {
         this.physicWorld.setAutoClearForces(false);
         this.engine = new Engine();
         this.tiledAshleySpawner = new TiledAshleySpawner(this.engine, this.physicWorld, this.game.getAssetService());
-        ImmutableArray<Entity> controllerEntities = this.engine.getEntitiesFor(Family.all(Controller.class).get());
-        this.keyboardController = new KeyboardController(GameControllerState.class, controllerEntities);
+        this.keyboardController = new KeyboardController(GameControllerState.class, engine, null);
 
         // add ECS systems
         this.engine.addSystem(new PhysicMoveSystem());

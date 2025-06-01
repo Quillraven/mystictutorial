@@ -4,5 +4,6 @@ public enum Command {
     LEFT,
     RIGHT,
     DOWN,
-    UP
+    UP,
+    SELECT
 }

@@ -1,9 +1,9 @@
 package io.github.com.quillraven.input;
 
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import java.util.HashMap;
@@ -14,20 +14,28 @@ public class KeyboardController extends InputAdapter {
         Map.entry(Input.Keys.W, Command.UP),
         Map.entry(Input.Keys.S, Command.DOWN),
         Map.entry(Input.Keys.A, Command.LEFT),
-        Map.entry(Input.Keys.D, Command.RIGHT)
+        Map.entry(Input.Keys.D, Command.RIGHT),
+        Map.entry(Input.Keys.SPACE, Command.SELECT)
     );
 
     private final boolean[] commandState;
     private final Map<Class<? extends ControllerState>, ControllerState> stateCache;
     private ControllerState activeState;
 
-    public KeyboardController(Class<? extends ControllerState> initialState, ImmutableArray<Entity> controllerEntities) {
+    public KeyboardController(Class<? extends ControllerState> initialState,
+                              Engine engine,
+                              Stage stage) {
         this.commandState = new boolean[Command.values().length];
         this.stateCache = new HashMap<>();
         this.activeState = null;
 
         this.stateCache.put(IdleControllerState.class, new IdleControllerState());
-        this.stateCache.put(GameControllerState.class, new GameControllerState(controllerEntities));
+        if (engine != null) {
+            this.stateCache.put(GameControllerState.class, new GameControllerState(engine));
+        }
+        if (stage != null) {
+            this.stateCache.put(UiControllerState.class, new UiControllerState(stage));
+        }
         setActiveState(initialState);
     }
 

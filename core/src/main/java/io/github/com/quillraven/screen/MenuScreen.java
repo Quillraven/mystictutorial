@@ -9,6 +9,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.com.quillraven.GdxGame;
 import io.github.com.quillraven.asset.MusicAsset;
 import io.github.com.quillraven.asset.SkinAsset;
+import io.github.com.quillraven.input.KeyboardController;
+import io.github.com.quillraven.input.UiControllerState;
 import io.github.com.quillraven.ui.model.MenuViewModel;
 import io.github.com.quillraven.ui.view.MenuView;
 
@@ -19,12 +21,14 @@ public class MenuScreen extends ScreenAdapter {
     private final Skin skin;
     private final Viewport uiViewport;
     private final InputMultiplexer inputMultiplexer;
+    private final KeyboardController keyboardController;
 
     public MenuScreen(GdxGame game) {
         this.game = game;
         this.uiViewport = new FitViewport(800f, 450f);
         this.stage = new Stage(uiViewport, game.getBatch());
         this.skin = game.getAssetService().get(SkinAsset.DEFAULT);
+        this.keyboardController = new KeyboardController(UiControllerState.class, null, stage);
         this.inputMultiplexer = game.getInputMultiplexer();
     }
 
@@ -37,6 +41,7 @@ public class MenuScreen extends ScreenAdapter {
     public void show() {
         this.inputMultiplexer.clear();
         this.inputMultiplexer.addProcessor(stage);
+        this.inputMultiplexer.addProcessor(keyboardController);
 
         this.stage.addActor(new MenuView(stage, skin, new MenuViewModel(game)));
         this.game.getAudioService().playMusic(MusicAsset.MENU);
