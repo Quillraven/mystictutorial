@@ -3,6 +3,7 @@ package io.github.com.quillraven.asset;
 public enum SoundAsset {
     SWORD_HIT("sword_hit.wav"),
     LIFE_REG("life_reg.wav"),
+    TRAP("trap.wav"),
     ;
 
     private final String path;

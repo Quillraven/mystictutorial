@@ -33,7 +33,7 @@ public class GameViewModel extends ViewModel {
     public void setLifePoints(int lifePoints) {
         if (this.lifePoints != lifePoints) {
             this.propertyChangeSupport.firePropertyChange(LIFE_POINTS, this.lifePoints, lifePoints);
-            if (this.lifePoints < lifePoints) {
+            if (this.lifePoints != 0 && this.lifePoints < lifePoints) {
                 audioService.playSound(SoundAsset.LIFE_REG);
             }
         }

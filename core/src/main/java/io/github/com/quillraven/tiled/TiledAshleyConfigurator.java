@@ -7,13 +7,10 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
-import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -21,7 +18,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import io.github.com.quillraven.GdxGame;
@@ -39,10 +35,12 @@ import io.github.com.quillraven.component.Life;
 import io.github.com.quillraven.component.Move;
 import io.github.com.quillraven.component.Physic;
 import io.github.com.quillraven.component.Player;
+import io.github.com.quillraven.component.Tiled;
 import io.github.com.quillraven.component.Transform;
+import io.github.com.quillraven.component.Trigger;
 
-public class TiledAshleySpawner {
-    private static final Vector2 DEFAULT_SCALING = new Vector2(1f, 1f);
+public class TiledAshleyConfigurator {
+    private static final Vector2 DEFAULT_PHYSIC_SCALING = new Vector2(1f, 1f);
 
     private final Engine engine;
     private final World physicWorld;
@@ -50,7 +48,7 @@ public class TiledAshleySpawner {
     private final Vector2 tmpVec2;
     private final AssetService assetService;
 
-    public TiledAshleySpawner(Engine engine, World physicWorld, AssetService assetService) {
+    public TiledAshleyConfigurator(Engine engine, World physicWorld, AssetService assetService) {
         this.engine = engine;
         this.physicWorld = physicWorld;
         this.tmpMapObjects = new MapObjects();
@@ -58,120 +56,49 @@ public class TiledAshleySpawner {
         this.assetService = assetService;
     }
 
-    public void loadMapObjects(TiledMap tiledMap) {
-        for (MapLayer layer : tiledMap.getLayers()) {
-            if (layer instanceof TiledMapTileLayer tileLayer) {
-                loadTileLayer(tileLayer);
-            } else if ("objects".equals(layer.getName())) {
-                loadObjectLayer(layer);
-            } else if ("trigger".equals(layer.getName())) {
-                loadTriggerLayer(layer);
-            }
-        }
-
-        spawnMapBoundary(tiledMap);
+    public void onLoadTile(TiledMapTile tile, float x, float y) {
+        createBody(tile.getObjects(),
+            new Vector2(x, y),
+            DEFAULT_PHYSIC_SCALING,
+            BodyDef.BodyType.StaticBody,
+            Vector2.Zero,
+            "environment");
     }
 
-    private void spawnMapBoundary(TiledMap tiledMap) {
-        // create four boxes for the map boundary (left, right, bottom and top edge)
-        int width = tiledMap.getProperties().get("width", 0, Integer.class);
-        int tileW = tiledMap.getProperties().get("tilewidth", 0, Integer.class);
-        int height = tiledMap.getProperties().get("height", 0, Integer.class);
-        int tileH = tiledMap.getProperties().get("tileheight", 0, Integer.class);
-        float mapW = width * tileW * GdxGame.UNIT_SCALE;
-        float mapH = height * tileH * GdxGame.UNIT_SCALE;
-        float halfW = mapW * 0.5f;
-        float halfH = mapH * 0.5f;
-        float boxThickness = 0.5f;
-
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyType.StaticBody;
-        bodyDef.position.setZero();
-        bodyDef.fixedRotation = true;
-        Body body = physicWorld.createBody(bodyDef);
-
-        // left edge
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(boxThickness, halfH, new Vector2(-boxThickness, halfH), 0f);
-        body.createFixture(shape, 0f).setFriction(0f);
-        shape.dispose();
-        // right edge
-        shape = new PolygonShape();
-        shape.setAsBox(boxThickness, halfH, new Vector2(mapW + boxThickness, halfH), 0f);
-        body.createFixture(shape, 0f).setFriction(0f);
-        shape.dispose();
-        // bottom edge
-        shape = new PolygonShape();
-        shape.setAsBox(halfW, boxThickness, new Vector2(halfW, -boxThickness), 0f);
-        body.createFixture(shape, 0f).setFriction(0f);
-        shape.dispose();
-        // top edge
-        shape = new PolygonShape();
-        shape.setAsBox(halfW, boxThickness, new Vector2(halfW, mapH + boxThickness), 0f);
-        body.createFixture(shape, 0f).setFriction(0f);
-        shape.dispose();
-    }
-
-    private void loadTileLayer(TiledMapTileLayer tileLayer) {
-        for (int y = 0; y < tileLayer.getHeight(); y++) {
-            for (int x = 0; x < tileLayer.getWidth(); x++) {
-                TiledMapTileLayer.Cell cell = tileLayer.getCell(x, y);
-                if (cell == null) continue;
-
-                TiledMapTile tile = cell.getTile();
-                createBody(tile.getObjects(),
-                    new Vector2(x, y),
-                    DEFAULT_SCALING,
-                    BodyType.StaticBody,
-                    Vector2.Zero,
-                    "environment");
-            }
+    public void onLoadTrigger(String triggerName, MapObject mapObject) {
+        if (mapObject instanceof RectangleMapObject rectMapObj) {
+            Entity entity = this.engine.createEntity();
+            Rectangle rect = rectMapObj.getRectangle();
+            addEntityTransform(
+                rect.getX(), rect.getY(), 0,
+                rect.getWidth(), rect.getHeight(),
+                1f, 1f,
+                0,
+                entity);
+            addEntityPhysic(
+                rectMapObj,
+                BodyDef.BodyType.StaticBody,
+                tmpVec2.set(rect.getX(), rect.getY()).scl(GdxGame.UNIT_SCALE),
+                entity);
+            entity.add(new Trigger(triggerName));
+            entity.add(new Tiled(rectMapObj));
+            this.engine.addEntity(entity);
+        } else {
+            throw new GdxRuntimeException("Unsupported map object type for trigger: " + mapObject.getClass().getSimpleName());
         }
     }
 
-    private void loadTriggerLayer(MapLayer triggerLayer) {
-        for (MapObject mapObject : triggerLayer.getObjects()) {
-            if (mapObject instanceof RectangleMapObject rectMapObj) {
-                Entity entity = this.engine.createEntity();
-                Rectangle rect = rectMapObj.getRectangle();
-                addEntityTransform(
-                    rect.getX(), rect.getY(),
-                    rect.getWidth(), rect.getHeight(),
-                    1f, 1f,
-                    0,
-                    entity);
-                addEntityPhysic(
-                    rectMapObj,
-                    BodyType.StaticBody,
-                    tmpVec2.set(rect.getX(), rect.getY()).scl(GdxGame.UNIT_SCALE),
-                    entity);
-                this.engine.addEntity(entity);
-            } else {
-                throw new GdxRuntimeException("Unsupported trigger: " + mapObject.getClass().getSimpleName());
-            }
-        }
-    }
-
-    private void loadObjectLayer(MapLayer objectLayer) {
-        for (MapObject mapObject : objectLayer.getObjects()) {
-            if (mapObject instanceof TiledMapTileMapObject tileMapObject) {
-                spawnEntityOf(tileMapObject);
-            } else {
-                throw new GdxRuntimeException("Unsupported object: " + mapObject.getClass().getSimpleName());
-            }
-        }
-    }
-
-    private void spawnEntityOf(TiledMapTileMapObject tileMapObject) {
+    public void onLoadObject(TiledMapTileMapObject tileMapObject) {
         Entity entity = this.engine.createEntity();
         TiledMapTile tile = tileMapObject.getTile();
         TextureRegion textureRegion = getTextureRegion(tile);
         String classType = tile.getProperties().get("type", "", String.class);
         float sortOffsetY = tile.getProperties().get("sortOffsetY", 0, Integer.class);
         sortOffsetY *= GdxGame.UNIT_SCALE;
+        int z = tile.getProperties().get("z", 1, Integer.class);
 
         addEntityTransform(
-            tileMapObject.getX(), tileMapObject.getY(),
+            tileMapObject.getX(), tileMapObject.getY(), z,
             textureRegion.getRegionWidth(), textureRegion.getRegionHeight(),
             tileMapObject.getScaleX(), tileMapObject.getScaleY(),
             sortOffsetY,
@@ -190,6 +117,7 @@ public class TiledAshleySpawner {
         entity.add(new Facing(FacingDirection.DOWN));
         entity.add(new Fsm(entity));
         entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
+        entity.add(new Tiled(tileMapObject));
 
         this.engine.addEntity(entity);
     }
@@ -258,8 +186,9 @@ public class TiledAshleySpawner {
         AtlasAsset atlasAsset = AtlasAsset.valueOf(atlasAssetStr);
         FileTextureData textureData = (FileTextureData) tile.getTextureRegion().getTexture().getTextureData();
         String atlasKey = textureData.getFileHandle().nameWithoutExtension();
+        float speed = tile.getProperties().get("animationSpeed", 0f, Float.class);
 
-        entity.add(new Animation2D(atlasAsset, atlasKey, animationType, Animation.PlayMode.LOOP, 1f));
+        entity.add(new Animation2D(atlasAsset, atlasKey, animationType, Animation.PlayMode.LOOP, speed));
     }
 
     private void addEntityPhysic(MapObject mapObject, @SuppressWarnings("SameParameterValue") BodyType bodyType, Vector2 relativeTo, Entity entity) {
@@ -305,7 +234,7 @@ public class TiledAshleySpawner {
     }
 
     private static void addEntityTransform(
-        float x, float y,
+        float x, float y, int z,
         float w, float h,
         float scaleX, float scaleY,
         float sortOffsetY,
@@ -318,7 +247,7 @@ public class TiledAshleySpawner {
         position.scl(GdxGame.UNIT_SCALE);
         size.scl(GdxGame.UNIT_SCALE);
 
-        entity.add(new Transform(position, 0, size, scaling, 0f, sortOffsetY));
+        entity.add(new Transform(position, z, size, scaling, 0f, sortOffsetY));
     }
 
 }

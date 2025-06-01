@@ -361,3 +361,17 @@ player/walk_up
   orig: 32, 32
   offset: 0, 0
   index: 5
+trap/idle_down
+  rotate: false
+  xy: 38, 13
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+trap/idle_down
+  rotate: false
+  xy: 410, 129
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1

@@ -28,7 +28,8 @@ import io.github.com.quillraven.system.PhysicDebugRenderSystem;
 import io.github.com.quillraven.system.PhysicMoveSystem;
 import io.github.com.quillraven.system.PhysicSystem;
 import io.github.com.quillraven.system.RenderSystem;
-import io.github.com.quillraven.tiled.TiledAshleySpawner;
+import io.github.com.quillraven.system.TriggerSystem;
+import io.github.com.quillraven.tiled.TiledAshleyConfigurator;
 import io.github.com.quillraven.tiled.TiledService;
 import io.github.com.quillraven.ui.model.GameViewModel;
 import io.github.com.quillraven.ui.view.GameView;
@@ -43,7 +44,7 @@ public class GameScreen extends ScreenAdapter {
     private final Viewport uiViewport;
     private final TiledService tiledService;
     private final Engine engine;
-    private final TiledAshleySpawner tiledAshleySpawner;
+    private final TiledAshleyConfigurator tiledAshleyConfigurator;
     private final World physicWorld;
     private final KeyboardController keyboardController;
     private final AudioService audioService;
@@ -55,11 +56,11 @@ public class GameScreen extends ScreenAdapter {
         this.skin = game.getAssetService().get(SkinAsset.DEFAULT);
         this.viewModel = new GameViewModel(game);
         this.audioService = game.getAudioService();
-        this.tiledService = new TiledService(game.getAssetService());
         this.physicWorld = new World(Vector2.Zero, true);
         this.physicWorld.setAutoClearForces(false);
+        this.tiledService = new TiledService(game.getAssetService(), this.physicWorld);
         this.engine = new Engine();
-        this.tiledAshleySpawner = new TiledAshleySpawner(this.engine, this.physicWorld, this.game.getAssetService());
+        this.tiledAshleyConfigurator = new TiledAshleyConfigurator(this.engine, this.physicWorld, this.game.getAssetService());
         this.keyboardController = new KeyboardController(GameControllerState.class, engine, null);
 
         // add ECS systems
@@ -67,6 +68,7 @@ public class GameScreen extends ScreenAdapter {
         this.engine.addSystem(new PhysicSystem(physicWorld, 1 / 60f));
         this.engine.addSystem(new FacingSystem());
         this.engine.addSystem(new FsmSystem());
+        this.engine.addSystem(new TriggerSystem(audioService));
         this.engine.addSystem(new LifeSystem(this.viewModel));
         this.engine.addSystem(new AnimationSystem(game.getAssetService()));
         this.engine.addSystem(new CameraSystem(game.getCamera()));
@@ -83,12 +85,12 @@ public class GameScreen extends ScreenAdapter {
         this.stage.addActor(new GameView(stage, skin, this.viewModel));
 
         Consumer<TiledMap> renderConsumer = this.engine.getSystem(RenderSystem.class)::setMap;
-        Consumer<TiledMap> ashleySpawnerConsumer = this.tiledAshleySpawner::loadMapObjects;
         Consumer<TiledMap> cameraConsumer = this.engine.getSystem(CameraSystem.class)::setMap;
         Consumer<TiledMap> audioConsumer = this.audioService::setMap;
-        this.tiledService.setMapChangeConsumer(
-            renderConsumer.andThen(ashleySpawnerConsumer).andThen(cameraConsumer).andThen(audioConsumer)
-        );
+        this.tiledService.setMapChangeConsumer(renderConsumer.andThen(cameraConsumer).andThen(audioConsumer));
+        this.tiledService.setLoadTriggerConsumer(tiledAshleyConfigurator::onLoadTrigger);
+        this.tiledService.setLoadObjectConsumer(tiledAshleyConfigurator::onLoadObject);
+        this.tiledService.setLoadTileConsumer(tiledAshleyConfigurator::onLoadTile);
 
         TiledMap startMap = this.tiledService.loadMap(MapAsset.MAIN);
         this.tiledService.setMap(startMap);

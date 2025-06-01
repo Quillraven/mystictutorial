@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.0" name="objects" tilewidth="80" tileheight="112" tilecount="4" columns="0">
+<tileset version="1.10" tiledversion="1.11.0" name="objects" tilewidth="80" tileheight="112" tilecount="5" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="1" type="Object">
   <properties>
    <property name="animation" value="IDLE"/>
+   <property name="animationSpeed" type="float" value="1"/>
    <property name="life" type="int" value="12"/>
    <property name="lifeReg" type="float" value="0.25"/>
    <property name="speed" type="float" value="3.5"/>
@@ -34,5 +35,12 @@
     <polygon points="0,0 6,1 11,1 16,-1 16,-2 14,-5 13,-13 3,-13 3,-6 2,-5 1,-3 0,-1"/>
    </object>
   </objectgroup>
+ </tile>
+ <tile id="6" type="Object">
+  <properties>
+   <property name="animation" value="IDLE"/>
+   <property name="z" type="int" value="0"/>
+  </properties>
+  <image source="objects/trap.png" width="16" height="16"/>
  </tile>
 </tileset>

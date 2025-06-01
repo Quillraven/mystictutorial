@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="18" height="16" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="15">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="18" height="16" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="17">
  <properties>
   <property name="music" value="TOWN"/>
  </properties>
  <tileset firstgid="1" source="objects.tsx"/>
- <tileset firstgid="7" source="tileset.tsx"/>
+ <tileset firstgid="8" source="tileset.tsx"/>
  <layer id="1" name="ground" width="18" height="16">
   <data encoding="base64" compression="zlib">
-   eJylkjsPwjAMhLPykCoeEjDBxkgzARPqBEywla2w9lfkp3OVYumwTAgwfFIb+c7xOcE5twRzgxUIXzAyzkpQxO8t2Cn2hmYNesZ5ET1uoCXuoIo1G0PD/92sC3CI2gs4EWejb+c5i3l48gjkUxm6XHgm9vGZWslSPBpQOztbQe9BZ8rURr0g/bheMr0mPHl3rXvdAe/CU8ZWD00qK/F5kM8vezvG2fgO1rvJ9WJt+aFev+9/6YOBYvimNnW3MZgophn9n9wdbaQ=
+   eJylkjsOwjAQRF3z6SI+HVBDzwGIa6BGqYEa+tAHLpCz+G5MJK80Wm2MgeJJibUz6511cM6twdJgA8IXTIyzEhTxew8OiqOh2YKBcV5EjwdoiSeoYs3O0PB/N+sKnKL2Bi7E1ejbeS5iHp48AvlUhi4Xnol9fKZWshSPBtQ92Qp6DzpTpjbqBenH9ZLpPeHJu2vVDngXnjK2emhSWYnPi3x+2ds5zsZ3sN5Nrhdryw/1+n3/yxCMFOOe2tTdpmCmmGf0fwPl7aDo
   </data>
  </layer>
  <layer id="3" name="water" width="18" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjALKgTES24hIPQAWrABm
+   eJxjYBgFo2AUjALKgQcQC0DZ7kTqAQAhOACg
   </data>
  </layer>
- <objectgroup id="6" name="trigger"/>
+ <objectgroup id="6" name="trigger">
+  <object id="16" name="trap_trigger" x="97" y="114" width="14" height="12">
+   <properties>
+    <property name="sensor" type="bool" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
  <objectgroup id="5" name="objects">
   <object id="5" gid="3" x="197" y="118" width="80" height="112"/>
   <object id="9" gid="5" x="32" y="32" width="16" height="16"/>
@@ -29,5 +35,6 @@
   <object id="12" gid="6" x="137" y="206" width="41" height="63"/>
   <object id="13" gid="6" x="72" y="93" width="41" height="63"/>
   <object id="14" gid="6" x="176" y="123" width="41" height="63"/>
+  <object id="15" gid="7" x="96" y="128" width="16" height="16"/>
  </objectgroup>
 </map>
