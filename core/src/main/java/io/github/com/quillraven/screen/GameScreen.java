@@ -2,8 +2,6 @@ package io.github.com.quillraven.screen;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
@@ -16,6 +14,7 @@ import io.github.com.quillraven.input.GameControllerState;
 import io.github.com.quillraven.input.KeyboardController;
 import io.github.com.quillraven.system.AnimationSystem;
 import io.github.com.quillraven.system.CameraSystem;
+import io.github.com.quillraven.system.ControllerSystem;
 import io.github.com.quillraven.system.FacingSystem;
 import io.github.com.quillraven.system.FsmSystem;
 import io.github.com.quillraven.system.PhysicDebugRenderSystem;
@@ -55,6 +54,7 @@ public class GameScreen extends ScreenAdapter {
         this.engine.addSystem(new CameraSystem(game.getCamera()));
         this.engine.addSystem(new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera()));
         this.engine.addSystem(new PhysicDebugRenderSystem(this.physicWorld, game.getCamera()));
+        this.engine.addSystem(new ControllerSystem(game));
     }
 
     @Override
@@ -84,11 +84,6 @@ public class GameScreen extends ScreenAdapter {
     public void render(float delta) {
         delta = Math.min(1 / 30f, delta);
         engine.update(delta);
-
-        // TODO refactor
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            this.game.setScreen(MenuScreen.class);
-        }
     }
 
     @Override
