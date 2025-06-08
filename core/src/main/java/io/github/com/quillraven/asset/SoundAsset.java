@@ -4,6 +4,7 @@ public enum SoundAsset {
     SWORD_HIT("sword_hit.wav"),
     LIFE_REG("life_reg.wav"),
     TRAP("trap.wav"),
+    SWING("swing.wav"),
     ;
 
     private final String path;

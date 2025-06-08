@@ -69,7 +69,7 @@ public class GameScreen extends ScreenAdapter {
         this.engine.addSystem(new PhysicMoveSystem());
         this.engine.addSystem(new PhysicSystem(physicWorld, 1 / 60f));
         this.engine.addSystem(new FacingSystem());
-        this.engine.addSystem(new AttackSystem(physicWorld));
+        this.engine.addSystem(new AttackSystem(physicWorld, audioService));
         this.engine.addSystem(new FsmSystem());
         // DamagedSystem must run after FsmSystem to correctly
         // detect when a damaged animation should be played.

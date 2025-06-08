@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import io.github.com.quillraven.audio.AudioService;
 import io.github.com.quillraven.component.Attack;
 import io.github.com.quillraven.component.Damaged;
 import io.github.com.quillraven.component.Facing;
@@ -22,13 +23,15 @@ import io.github.com.quillraven.component.Physic;
 public class AttackSystem extends IteratingSystem {
     public static final Rectangle attackAABB = new Rectangle();
 
+    private final AudioService audioService;
     private final World world;
     private final Vector2 tmpVertex;
     private Body attackerBody;
     private float attackDamage;
 
-    public AttackSystem(World world) {
+    public AttackSystem(World world, AudioService audioService) {
         super(Family.all(Attack.class, Facing.class, Physic.class).get());
+        this.audioService = audioService;
         this.world = world;
         this.tmpVertex = new Vector2();
         this.attackerBody = null;
@@ -38,7 +41,12 @@ public class AttackSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         Attack attack = Attack.MAPPER.get(entity);
+        // can attack = true means that the attack was not started yet
         if (attack.canAttack()) return;
+
+        if (attack.hasAttackStarted() && attack.getSfx() != null) {
+            audioService.playSound(attack.getSfx());
+        }
 
         attack.decAttackTimer(deltaTime);
         if (attack.canAttack()) {

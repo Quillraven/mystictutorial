@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import io.github.com.quillraven.GdxGame;
 import io.github.com.quillraven.asset.AssetService;
 import io.github.com.quillraven.asset.AtlasAsset;
+import io.github.com.quillraven.asset.SoundAsset;
 import io.github.com.quillraven.component.Animation2D;
 import io.github.com.quillraven.component.Animation2D.AnimationType;
 import io.github.com.quillraven.component.Attack;
@@ -140,7 +141,12 @@ public class TiledAshleyConfigurator {
         if (damage == 0f) return;
 
         float damageDelay = tile.getProperties().get("damageDelay", 0f, Float.class);
-        entity.add(new Attack(damage, damageDelay));
+        String soundAssetStr = tile.getProperties().get("attackSound", String.class);
+        SoundAsset soundAsset = null;
+        if (soundAssetStr != null) {
+            soundAsset = SoundAsset.valueOf(soundAssetStr);
+        }
+        entity.add(new Attack(damage, damageDelay, soundAsset));
     }
 
     private void addEntityPlayer(TiledMapTileMapObject tileMapObject, Entity entity) {
