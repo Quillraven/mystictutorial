@@ -15,6 +15,7 @@ public class PhysicDebugRenderSystem extends EntitySystem implements Disposable 
         this.box2DDebugRenderer = new Box2DDebugRenderer();
         this.physicWorld = physicWorld;
         this.camera = camera;
+        setProcessing(false);
     }
 
     @Override
