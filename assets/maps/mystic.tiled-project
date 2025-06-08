@@ -21,6 +21,17 @@
             "valuesAsFlags": false
         },
         {
+            "id": 4,
+            "name": "BodyType",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "StaticBody",
+                "DynamicBody"
+            ],
+            "valuesAsFlags": false
+        },
+        {
             "color": "#ffa0a0a4",
             "drawFill": true,
             "id": 3,
@@ -40,6 +51,22 @@
                     "propertyType": "AtlasAsset",
                     "type": "string",
                     "value": "OBJECTS"
+                },
+                {
+                    "name": "bodyType",
+                    "propertyType": "BodyType",
+                    "type": "string",
+                    "value": "DynamicBody"
+                },
+                {
+                    "name": "damage",
+                    "type": "float",
+                    "value": 0
+                },
+                {
+                    "name": "damageDelay",
+                    "type": "float",
+                    "value": 0
                 },
                 {
                     "name": "life",

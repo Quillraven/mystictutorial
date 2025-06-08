@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import io.github.com.quillraven.component.Physic;
@@ -95,26 +96,28 @@ public class PhysicSystem extends IteratingSystem implements EntityListener, Con
 
     @Override
     public void beginContact(Contact contact) {
-        Object userDataA = contact.getFixtureA().getBody().getUserData();
-        Object userDataB = contact.getFixtureB().getBody().getUserData();
+        Fixture fixtureA = contact.getFixtureA();
+        Object userDataA = fixtureA.getBody().getUserData();
+        Fixture fixtureB = contact.getFixtureB();
+        Object userDataB = fixtureB.getBody().getUserData();
 
         if (!(userDataA instanceof Entity entityA) || !(userDataB instanceof Entity entityB)) {
             return;
         }
 
-        playerTriggerContact(entityA, entityB);
+        playerTriggerContact(entityA, fixtureA, entityB, fixtureB);
     }
 
-    private static void playerTriggerContact(Entity entityA, Entity entityB) {
+    private static void playerTriggerContact(Entity entityA, Fixture fixtureA, Entity entityB, Fixture fixtureB) {
         Trigger trigger = Trigger.MAPPER.get(entityA);
-        boolean isPlayer = Player.MAPPER.get(entityB) != null;
+        boolean isPlayer = Player.MAPPER.get(entityB) != null && !fixtureB.isSensor();
         if (trigger != null && isPlayer) {
             trigger.setTriggeringEntity(entityB);
             return;
         }
 
         trigger = Trigger.MAPPER.get(entityB);
-        isPlayer = Player.MAPPER.get(entityA) != null;
+        isPlayer = Player.MAPPER.get(entityA) != null && !fixtureA.isSensor();
         if (trigger != null && isPlayer) {
             trigger.setTriggeringEntity(entityA);
         }

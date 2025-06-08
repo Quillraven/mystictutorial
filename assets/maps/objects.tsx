@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.0" name="objects" tilewidth="80" tileheight="112" tilecount="5" columns="0">
+<tileset version="1.10" tiledversion="1.11.2" name="objects" tilewidth="80" tileheight="112" tilecount="6" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="1" type="Object">
   <properties>
    <property name="animation" value="IDLE"/>
    <property name="animationSpeed" type="float" value="1"/>
+   <property name="damage" type="float" value="7"/>
+   <property name="damageDelay" type="float" value="0.2"/>
    <property name="life" type="int" value="12"/>
    <property name="lifeReg" type="float" value="0.25"/>
    <property name="speed" type="float" value="3.5"/>
@@ -13,6 +15,26 @@
   <objectgroup draworder="index" id="2">
    <object id="1" x="11" y="18" width="9" height="5">
     <ellipse/>
+   </object>
+   <object id="2" name="attack_sensor_down" x="0" y="17" width="32" height="15">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+   <object id="3" name="attack_sensor_up" x="0" y="0" width="32" height="15">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+   <object id="4" name="attack_sensor_left" x="0" y="0" width="15" height="32">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+   <object id="5" name="attack_sensor_right" x="17" y="0" width="15" height="32">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
    </object>
   </objectgroup>
  </tile>
@@ -42,5 +64,18 @@
    <property name="z" type="int" value="0"/>
   </properties>
   <image source="objects/trap.png" width="16" height="16"/>
+ </tile>
+ <tile id="7" type="Object">
+  <properties>
+   <property name="animation" value="IDLE"/>
+   <property name="animationSpeed" type="float" value="1"/>
+   <property name="bodyType" propertytype="BodyType" value="StaticBody"/>
+   <property name="life" type="int" value="99999"/>
+   <property name="lifeReg" type="float" value="9999"/>
+  </properties>
+  <image source="objects/training_dummy.png" width="32" height="32"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="3" y="12" width="26" height="16"/>
+  </objectgroup>
  </tile>
 </tileset>

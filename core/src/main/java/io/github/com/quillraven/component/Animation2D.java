@@ -85,9 +85,16 @@ public class Animation2D implements Component {
         return this.stateTime;
     }
 
+    public boolean isFinished() {
+        return animation.isAnimationFinished(stateTime);
+    }
+
     public enum AnimationType {
         IDLE,
-        WALK;
+        WALK,
+        ATTACK,
+        DAMAGED,
+        ;
 
         private final String atlasKey;
 

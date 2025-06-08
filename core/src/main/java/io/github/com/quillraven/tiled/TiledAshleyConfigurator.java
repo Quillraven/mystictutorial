@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -25,6 +26,7 @@ import io.github.com.quillraven.asset.AssetService;
 import io.github.com.quillraven.asset.AtlasAsset;
 import io.github.com.quillraven.component.Animation2D;
 import io.github.com.quillraven.component.Animation2D.AnimationType;
+import io.github.com.quillraven.component.Attack;
 import io.github.com.quillraven.component.CameraFollow;
 import io.github.com.quillraven.component.Controller;
 import io.github.com.quillraven.component.Facing;
@@ -92,7 +94,6 @@ public class TiledAshleyConfigurator {
         Entity entity = this.engine.createEntity();
         TiledMapTile tile = tileMapObject.getTile();
         TextureRegion textureRegion = getTextureRegion(tile);
-        String classType = tile.getProperties().get("type", "", String.class);
         float sortOffsetY = tile.getProperties().get("sortOffsetY", 0, Integer.class);
         sortOffsetY *= GdxGame.UNIT_SCALE;
         int z = tile.getProperties().get("z", 1, Integer.class);
@@ -103,9 +104,10 @@ public class TiledAshleyConfigurator {
             tileMapObject.getScaleX(), tileMapObject.getScaleY(),
             sortOffsetY,
             entity);
+        BodyType bodyType = getObjectBodyType(tile);
         addEntityPhysic(
             tile.getObjects(),
-            "Prop".equals(classType) ? BodyType.StaticBody : BodyType.DynamicBody,
+            bodyType,
             Vector2.Zero,
             entity);
         addEntityAnimation(tile, entity);
@@ -114,12 +116,31 @@ public class TiledAshleyConfigurator {
         addEntityCameraFollow(tileMapObject, entity);
         addEntityLife(tile, entity);
         addEntityPlayer(tileMapObject, entity);
+        addEntityAttack(tile, entity);
         entity.add(new Facing(FacingDirection.DOWN));
         entity.add(new Fsm(entity));
         entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
         entity.add(new Tiled(tileMapObject));
 
         this.engine.addEntity(entity);
+    }
+
+    private BodyType getObjectBodyType(TiledMapTile tile) {
+        String classType = tile.getProperties().get("type", "", String.class);
+        if ("Prop".equals(classType)) {
+            return BodyType.StaticBody;
+        }
+
+        String bodyTypeStr = tile.getProperties().get("bodyType", "DynamicBody", String.class);
+        return BodyType.valueOf(bodyTypeStr);
+    }
+
+    private void addEntityAttack(TiledMapTile tile, Entity entity) {
+        float damage = tile.getProperties().get("damage", 0f, Float.class);
+        if (damage == 0f) return;
+
+        float damageDelay = tile.getProperties().get("damageDelay", 0f, Float.class);
+        entity.add(new Attack(damage, damageDelay));
     }
 
     private void addEntityPlayer(TiledMapTileMapObject tileMapObject, Entity entity) {
@@ -227,7 +248,8 @@ public class TiledAshleyConfigurator {
         body.setUserData(userData);
         for (MapObject object : mapObjects) {
             FixtureDef fixtureDef = TiledPhysics.fixtureDefOf(object, scaling, relativeTo);
-            body.createFixture(fixtureDef);
+            Fixture fixture = body.createFixture(fixtureDef);
+            fixture.setUserData(object.getName());
             fixtureDef.shape.dispose();
         }
         return body;

@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -33,6 +34,7 @@ public class GdxGame extends Game {
     private OrthographicCamera camera;
     private Viewport viewport;
     private GLProfiler glProfiler;
+    private FPSLogger fpsLogger;
     private InputMultiplexer inputMultiplexer;
 
     private final Map<Class<? extends Screen>, Screen> screenCache = new HashMap<>();
@@ -51,6 +53,7 @@ public class GdxGame extends Game {
 
         glProfiler = new GLProfiler(Gdx.graphics);
         glProfiler.enable();
+        fpsLogger = new FPSLogger();
 
         addScreen(new LoadingScreen(this));
         setScreen(LoadingScreen.class);
@@ -81,9 +84,8 @@ public class GdxGame extends Game {
 
         super.render();
 
-        Gdx.graphics.setTitle("Mystic Tutorial " +
-            "- Draw Calls: " + glProfiler.getDrawCalls() + " " +
-            "- FPS: " + Gdx.graphics.getFramesPerSecond());
+        Gdx.graphics.setTitle("Mystic Tutorial - Draw Calls: " + glProfiler.getDrawCalls());
+        fpsLogger.log();
     }
 
     @Override

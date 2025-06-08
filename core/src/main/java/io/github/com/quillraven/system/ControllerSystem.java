@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import io.github.com.quillraven.GdxGame;
+import io.github.com.quillraven.component.Attack;
 import io.github.com.quillraven.component.Controller;
 import io.github.com.quillraven.component.Move;
 import io.github.com.quillraven.input.Command;
@@ -30,6 +31,7 @@ public class ControllerSystem extends IteratingSystem {
                 case DOWN -> moveEntity(entity, 0f, -1f);
                 case LEFT -> moveEntity(entity, -1f, 0f);
                 case RIGHT -> moveEntity(entity, 1f, 0f);
+                case SELECT -> startEntityAttack(entity);
                 case CANCEL -> game.setScreen(MenuScreen.class);
             }
         }
@@ -44,6 +46,13 @@ public class ControllerSystem extends IteratingSystem {
             }
         }
         controller.getReleasedCommands().clear();
+    }
+
+    private void startEntityAttack(Entity entity) {
+        Attack attack = Attack.MAPPER.get(entity);
+        if (attack != null && attack.canAttack()) {
+            attack.startAttack();
+        }
     }
 
     private void moveEntity(Entity entity, float dx, float dy) {

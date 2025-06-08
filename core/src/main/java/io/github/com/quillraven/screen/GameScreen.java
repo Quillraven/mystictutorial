@@ -19,8 +19,10 @@ import io.github.com.quillraven.audio.AudioService;
 import io.github.com.quillraven.input.GameControllerState;
 import io.github.com.quillraven.input.KeyboardController;
 import io.github.com.quillraven.system.AnimationSystem;
+import io.github.com.quillraven.system.AttackSystem;
 import io.github.com.quillraven.system.CameraSystem;
 import io.github.com.quillraven.system.ControllerSystem;
+import io.github.com.quillraven.system.DamagedSystem;
 import io.github.com.quillraven.system.FacingSystem;
 import io.github.com.quillraven.system.FsmSystem;
 import io.github.com.quillraven.system.LifeSystem;
@@ -67,7 +69,13 @@ public class GameScreen extends ScreenAdapter {
         this.engine.addSystem(new PhysicMoveSystem());
         this.engine.addSystem(new PhysicSystem(physicWorld, 1 / 60f));
         this.engine.addSystem(new FacingSystem());
+        this.engine.addSystem(new AttackSystem(physicWorld));
         this.engine.addSystem(new FsmSystem());
+        // DamagedSystem must run after FsmSystem to correctly
+        // detect when a damaged animation should be played.
+        // This is done by checking if an entity has a Damaged component,
+        // and this component is removed in the DamagedSystem.
+        this.engine.addSystem(new DamagedSystem());
         this.engine.addSystem(new TriggerSystem(audioService));
         this.engine.addSystem(new LifeSystem(this.viewModel));
         this.engine.addSystem(new AnimationSystem(game.getAssetService()));
