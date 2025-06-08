@@ -23,3 +23,4 @@ The game itself contains:
 - [UI essentials](https://crusenho.itch.io/complete-ui-essential-pack)
 - [8-bit-fantasy Music](https://xdeviruchi.itch.io/8-bit-fantasy-adventure-music-pack)
 - [SFX generator](https://sfxr.me/)
+- [Training dummy](https://elthen.itch.io/2d-pixel-art-training-dummy)
