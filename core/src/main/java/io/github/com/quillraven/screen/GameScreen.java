@@ -75,7 +75,7 @@ public class GameScreen extends ScreenAdapter {
         // detect when a damaged animation should be played.
         // This is done by checking if an entity has a Damaged component,
         // and this component is removed in the DamagedSystem.
-        this.engine.addSystem(new DamagedSystem());
+        this.engine.addSystem(new DamagedSystem(viewModel));
         this.engine.addSystem(new TriggerSystem(audioService));
         this.engine.addSystem(new LifeSystem(this.viewModel));
         this.engine.addSystem(new AnimationSystem(game.getAssetService()));

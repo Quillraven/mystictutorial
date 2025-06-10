@@ -10,7 +10,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Disposable;
-import com.ray3k.stripe.FreeTypeSkinLoader;
+import com.github.tommyettinger.freetypist.FreeTypistSkinLoader;
 
 public class AssetService implements Disposable {
     private final AssetManager assetManager;
@@ -18,7 +18,7 @@ public class AssetService implements Disposable {
     public AssetService(FileHandleResolver fileHandleResolver) {
         this.assetManager = new AssetManager(fileHandleResolver);
         this.assetManager.setLoader(TiledMap.class, new TmxMapLoader());
-        assetManager.setLoader(Skin.class, new FreeTypeSkinLoader(assetManager.getFileHandleResolver()));
+        assetManager.setLoader(Skin.class, new FreeTypistSkinLoader(assetManager.getFileHandleResolver()));
     }
 
     public TiledMap load(MapAsset mapAsset) {

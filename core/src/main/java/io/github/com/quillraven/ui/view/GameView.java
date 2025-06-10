@@ -1,12 +1,18 @@
 package io.github.com.quillraven.ui.view;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
+import com.github.tommyettinger.textra.TextraLabel;
+import com.github.tommyettinger.textra.TypingLabel;
 import io.github.com.quillraven.ui.model.GameViewModel;
+
+import java.util.Map;
 
 public class GameView extends View<GameViewModel> {
     private final HorizontalGroup lifeGroup;
@@ -18,6 +24,7 @@ public class GameView extends View<GameViewModel> {
         updateLife(viewModel.getLifePoints());
 
         viewModel.onPropertyChange(GameViewModel.LIFE_POINTS, Integer.class, this::updateLife);
+        viewModel.onPropertyChange(GameViewModel.PLAYER_DAMAGE, Map.Entry.class, this::showDamage);
     }
 
     @Override
@@ -45,5 +52,17 @@ public class GameView extends View<GameViewModel> {
             maxLife -= 4;
             lifePoints -= 4;
         }
+    }
+
+    private void showDamage(Map.Entry<Vector2, Integer> damAndPos) {
+        Vector2 position = damAndPos.getKey();
+        int damage = damAndPos.getValue();
+        stage.getViewport().unproject(position);
+        position.y = stage.getViewport().getWorldHeight() - position.y;
+
+        TextraLabel textraLabel = new TypingLabel("[%75]{JUMP=2.0;0.5;0.9}{RAINBOW}" + damage, skin, "small");
+        textraLabel.setPosition(position.x, position.y);
+        stage.addActor(textraLabel);
+        textraLabel.addAction(Actions.sequence(Actions.delay(1.25f), Actions.removeActor()));
     }
 }
