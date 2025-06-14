@@ -17,6 +17,12 @@ The game itself contains:
 - a heart lifebar including life regeneration
 - an entity component system architecture using Ashley (ECS)
 
+### Controls
+
+- WASD: Movement + UI navigation
+- SPACE: Attack + UI select
+- ESCAPE: Change screen from game to menu
+
 ### Credits
 - [Cute Fantasy assets](https://kenmi-art.itch.io/cute-fantasy-rpg)
 - [JRPG Music](https://yubatake.bandcamp.com/album/jrpg-collection)
