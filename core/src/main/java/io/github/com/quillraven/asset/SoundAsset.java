@@ -1,19 +1,23 @@
 package io.github.com.quillraven.asset;
 
-public enum SoundAsset {
+import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.audio.Sound;
+
+public enum SoundAsset implements Asset<Sound> {
     SWORD_HIT("sword_hit.wav"),
     LIFE_REG("life_reg.wav"),
     TRAP("trap.wav"),
     SWING("swing.wav"),
     ;
 
-    private final String path;
+    private final AssetDescriptor<Sound> descriptor;
 
     SoundAsset(String musicFile) {
-        this.path = "audio/" + musicFile;
+        this.descriptor = new AssetDescriptor<>("audio/" + musicFile, Sound.class);
     }
 
-    public String getPath() {
-        return path;
+    @Override
+    public AssetDescriptor<Sound> getDescriptor() {
+        return descriptor;
     }
 }

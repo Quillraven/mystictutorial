@@ -3,9 +3,6 @@ package io.github.com.quillraven.asset;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -21,52 +18,23 @@ public class AssetService implements Disposable {
         assetManager.setLoader(Skin.class, new FreeTypistSkinLoader(assetManager.getFileHandleResolver()));
     }
 
-    public TiledMap load(MapAsset mapAsset) {
-        String path = mapAsset.getPath();
-        this.assetManager.load(path, TiledMap.class);
+    public <T> T load(Asset<T> asset) {
+        this.assetManager.load(asset.getDescriptor());
         this.assetManager.finishLoading();
-        return this.assetManager.get(path, TiledMap.class);
+        return this.assetManager.get(asset.getDescriptor());
     }
 
-    public void unload(MapAsset mapAsset) {
-        this.assetManager.unload(mapAsset.getPath());
-        this.assetManager.finishLoading();
-    }
-
-    public void queue(AtlasAsset atlasAsset) {
-        this.assetManager.load(atlasAsset.getPath(), TextureAtlas.class);
-    }
-
-    public TextureAtlas get(AtlasAsset atlasAsset) {
-        return this.assetManager.get(atlasAsset.getPath(), TextureAtlas.class);
-    }
-
-    public Music load(MusicAsset musicAsset) {
-        String path = musicAsset.getPath();
-        this.assetManager.load(path, Music.class);
-        this.assetManager.finishLoading();
-        return this.assetManager.get(path, Music.class);
-    }
-
-    public void unload(MusicAsset musicAsset) {
-        this.assetManager.unload(musicAsset.getPath());
+    public <T> void unload(Asset<T> asset) {
+        this.assetManager.unload(asset.getDescriptor().fileName);
         this.assetManager.finishLoading();
     }
 
-    public void queue(SkinAsset skinAsset) {
-        this.assetManager.load(skinAsset.getPath(), Skin.class);
+    public <T> void queue(Asset<T> asset) {
+        this.assetManager.load(asset.getDescriptor());
     }
 
-    public Skin get(SkinAsset skinAsset) {
-        return this.assetManager.get(skinAsset.getPath(), Skin.class);
-    }
-
-    public void queue(SoundAsset soundAsset) {
-        this.assetManager.load(soundAsset.getPath(), Sound.class);
-    }
-
-    public Sound get(SoundAsset soundAsset) {
-        return this.assetManager.get(soundAsset.getPath(), Sound.class);
+    public <T> T get(Asset<T> asset) {
+        return this.assetManager.get(asset.getDescriptor());
     }
 
     public boolean update() {

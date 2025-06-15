@@ -1,15 +1,19 @@
 package io.github.com.quillraven.asset;
 
-public enum MapAsset {
+import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+
+public enum MapAsset implements Asset<TiledMap> {
     MAIN("mainmap.tmx");
 
-    private final String path;
+    private final AssetDescriptor<TiledMap> descriptor;
 
     MapAsset(String mapName) {
-        this.path = "maps/" + mapName;
+        this.descriptor = new AssetDescriptor<>("maps/" + mapName, TiledMap.class);
     }
 
-    public String getPath() {
-        return path;
+    @Override
+    public AssetDescriptor<TiledMap> getDescriptor() {
+        return descriptor;
     }
 }

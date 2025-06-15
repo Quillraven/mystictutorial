@@ -1,15 +1,19 @@
 package io.github.com.quillraven.asset;
 
-public enum SkinAsset {
+import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
+public enum SkinAsset implements Asset<Skin> {
     DEFAULT("skin.json");
 
-    private final String path;
+    private final AssetDescriptor<Skin> descriptor;
 
     SkinAsset(String skinJsonFile) {
-        this.path = "ui/" + skinJsonFile;
+        this.descriptor = new AssetDescriptor<>("ui/" + skinJsonFile, Skin.class);
     }
 
-    public String getPath() {
-        return path;
+    @Override
+    public AssetDescriptor<Skin> getDescriptor() {
+        return descriptor;
     }
 }
