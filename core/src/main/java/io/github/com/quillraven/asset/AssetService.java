@@ -26,7 +26,6 @@ public class AssetService implements Disposable {
 
     public <T> void unload(Asset<T> asset) {
         this.assetManager.unload(asset.getDescriptor().fileName);
-        this.assetManager.finishLoading();
     }
 
     public <T> void queue(Asset<T> asset) {
