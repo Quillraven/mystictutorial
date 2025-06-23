@@ -54,6 +54,7 @@ public class AudioService {
 
         this.currentMusic = this.assetService.load(musicAsset);
         this.currentMusic.setLooping(true);
+        this.currentMusic.setVolume(musicVolume);
         this.currentMusic.play();
         this.currentMusicAsset = musicAsset;
     }
