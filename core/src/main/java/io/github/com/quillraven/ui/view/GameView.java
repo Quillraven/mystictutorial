@@ -22,7 +22,10 @@ public class GameView extends View<GameViewModel> {
 
         this.lifeGroup = findActor("lifeGroup");
         updateLife(viewModel.getLifePoints());
+    }
 
+    @Override
+    protected void setupPropertyChanges() {
         viewModel.onPropertyChange(GameViewModel.LIFE_POINTS, Integer.class, this::updateLife);
         viewModel.onPropertyChange(GameViewModel.PLAYER_DAMAGE, Map.Entry.class, this::showDamage);
     }

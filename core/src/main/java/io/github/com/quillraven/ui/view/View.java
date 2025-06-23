@@ -28,7 +28,20 @@ public abstract class View<T extends ViewModel> extends Table implements EventLi
         setupUI();
     }
 
+    @Override
+    protected void setStage(Stage stage) {
+        super.setStage(stage);
+        if (stage == null) {
+            viewModel.clearPropertyChanges();
+        } else {
+            setupPropertyChanges();
+        }
+    }
+
     protected abstract void setupUI();
+
+    protected void setupPropertyChanges() {
+    }
 
     public void onLeft() {
     }
