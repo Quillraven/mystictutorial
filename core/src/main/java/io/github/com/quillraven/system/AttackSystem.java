@@ -18,6 +18,7 @@ import io.github.com.quillraven.component.Damaged;
 import io.github.com.quillraven.component.Facing;
 import io.github.com.quillraven.component.Facing.FacingDirection;
 import io.github.com.quillraven.component.Life;
+import io.github.com.quillraven.component.Move;
 import io.github.com.quillraven.component.Physic;
 
 public class AttackSystem extends IteratingSystem {
@@ -46,6 +47,10 @@ public class AttackSystem extends IteratingSystem {
 
         if (attack.hasAttackStarted() && attack.getSfx() != null) {
             audioService.playSound(attack.getSfx());
+            Move move = Move.MAPPER.get(entity);
+            if (move != null) {
+                move.setRooted(true);
+            }
         }
 
         attack.decAttackTimer(deltaTime);
@@ -57,6 +62,11 @@ public class AttackSystem extends IteratingSystem {
 
             this.attackDamage = attack.getDamage();
             world.QueryAABB(this::attackCallback, attackAABB.x, attackAABB.y, attackAABB.width, attackAABB.height);
+
+            Move move = Move.MAPPER.get(entity);
+            if (move != null) {
+                move.setRooted(false);
+            }
         }
     }
 
