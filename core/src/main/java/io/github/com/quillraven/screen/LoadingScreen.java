@@ -18,6 +18,9 @@ public class LoadingScreen extends ScreenAdapter {
         this.assetService = game.getAssetService();
     }
 
+    /**
+     * Queues all required assets for loading.
+     */
     @Override
     public void show() {
         for (AtlasAsset atlasAsset : AtlasAsset.values()) {
@@ -29,6 +32,9 @@ public class LoadingScreen extends ScreenAdapter {
         }
     }
 
+    /**
+     * Updates asset loading progress and transitions to menu when complete.
+     */
     @Override
     public void render(float delta) {
         if (assetService.update()) {

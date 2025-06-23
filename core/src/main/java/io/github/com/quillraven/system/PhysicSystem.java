@@ -44,6 +44,9 @@ public class PhysicSystem extends IteratingSystem implements EntityListener, Con
         engine.removeEntityListener(this);
     }
 
+    /**
+     * Updates physics simulation with fixed timestep and interpolation.
+     */
     @Override
     public void update(float deltaTime) {
         this.accumulator += deltaTime;
@@ -61,12 +64,18 @@ public class PhysicSystem extends IteratingSystem implements EntityListener, Con
         }
     }
 
+    /**
+     * Stores previous position for interpolation.
+     */
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         Physic physic = Physic.MAPPER.get(entity);
         physic.getPrevPosition().set(physic.getBody().getPosition());
     }
 
+    /**
+     * Interpolates entity position between physics steps.
+     */
     private void interpolateEntity(Entity entity, float alpha) {
         Transform transform = Transform.MAPPER.get(entity);
         Physic physic = Physic.MAPPER.get(entity);
@@ -94,6 +103,9 @@ public class PhysicSystem extends IteratingSystem implements EntityListener, Con
         }
     }
 
+    /**
+     * Handles collision detection between entities and triggers.
+     */
     @Override
     public void beginContact(Contact contact) {
         Fixture fixtureA = contact.getFixtureA();

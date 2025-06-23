@@ -27,6 +27,9 @@ public class CameraSystem extends IteratingSystem {
         this.targetPosition = new Vector2();
     }
 
+    /**
+     * Updates camera position with smooth following and boundary constraints.
+     */
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         Transform transform = Transform.MAPPER.get(entity);
@@ -39,8 +42,10 @@ public class CameraSystem extends IteratingSystem {
         camera.position.set(smoothedX, smoothedY, camera.position.z);
     }
 
+    /**
+     * Calculates target camera position within map boundaries.
+     */
     private void calcTargetPosition(Vector2 entityPosition) {
-        // Keep the target position within map boundaries
         float targetX = entityPosition.x;
         float targetY = entityPosition.y + CAM_OFFSET_Y;
         float camHalfW = camera.viewportWidth * 0.5f;
@@ -58,6 +63,9 @@ public class CameraSystem extends IteratingSystem {
         this.targetPosition.set(targetX, targetY);
     }
 
+    /**
+     * Sets up camera for a new map and positions it at the target entity.
+     */
     public void setMap(TiledMap tiledMap) {
         int width = tiledMap.getProperties().get("width", 0, Integer.class);
         int tileW = tiledMap.getProperties().get("tilewidth", 0, Integer.class);

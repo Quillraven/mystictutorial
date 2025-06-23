@@ -39,6 +39,9 @@ public class AttackSystem extends IteratingSystem {
         this.attackDamage = 0f;
     }
 
+    /**
+     * Processes attack logic including sound effects and damage detection.
+     */
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         Attack attack = Attack.MAPPER.get(entity);

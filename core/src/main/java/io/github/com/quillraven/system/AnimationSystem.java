@@ -31,6 +31,9 @@ public class AnimationSystem extends IteratingSystem {
         this.animationCache = new HashMap<>();
     }
 
+    /**
+     * Updates animation state and sets graphic's component region.
+     */
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         Animation2D animation2D = Animation2D.MAPPER.get(entity);
@@ -49,6 +52,9 @@ public class AnimationSystem extends IteratingSystem {
         Graphic.MAPPER.get(entity).setRegion(keyFrame);
     }
 
+    /**
+     * Updates animation based on direction and type, using cached animations.
+     */
     private void updateAnimation(Animation2D animation2D, FacingDirection direction) {
         AtlasAsset atlasAsset = animation2D.getAtlasAsset();
         String atlasKey = animation2D.getAtlasKey();

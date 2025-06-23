@@ -43,6 +43,9 @@ public class GameView extends View<GameViewModel> {
         add(horizontalGroup);
     }
 
+    /**
+     * Updates the life display with appropriate heart icons.
+     */
     private void updateLife(int lifePoints) {
         lifeGroup.clear();
 
@@ -57,6 +60,9 @@ public class GameView extends View<GameViewModel> {
         }
     }
 
+    /**
+     * Shows animated damage text at the specified position.
+     */
     private void showDamage(Map.Entry<Vector2, Integer> damAndPos) {
         Vector2 position = damAndPos.getKey();
         int damage = damAndPos.getValue();

@@ -91,6 +91,9 @@ public class TiledAshleyConfigurator {
         }
     }
 
+    /**
+     * Creates and configures an entity from a Tiled map object with all necessary components.
+     */
     public void onLoadObject(TiledMapTileMapObject tileMapObject) {
         Entity entity = this.engine.createEntity();
         TiledMapTile tile = tileMapObject.getTile();

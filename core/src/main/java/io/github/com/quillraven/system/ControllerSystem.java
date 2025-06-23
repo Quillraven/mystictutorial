@@ -18,6 +18,9 @@ public class ControllerSystem extends IteratingSystem {
         this.game = game;
     }
 
+    /**
+     * Processes input commands for the entity, handling movement and actions.
+     */
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         Controller controller = Controller.MAPPER.get(entity);

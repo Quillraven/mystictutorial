@@ -43,6 +43,9 @@ public class RenderSystem extends SortedIteratingSystem implements Disposable {
         this.bgdLayers = new ArrayList<>();
     }
 
+    /**
+     * Renders the scene with background, entities, and foreground layers.
+     */
     @Override
     public void update(float deltaTime) {
         AnimatedTiledMapTile.updateAnimationBaseTime();
@@ -61,6 +64,9 @@ public class RenderSystem extends SortedIteratingSystem implements Disposable {
         batch.end();
     }
 
+    /**
+     * Renders a single entity with its transform and graphic components.
+     */
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         Transform transform = Transform.MAPPER.get(entity);
@@ -84,6 +90,9 @@ public class RenderSystem extends SortedIteratingSystem implements Disposable {
         );
     }
 
+    /**
+     * Sets up the map and organizes layers into background and foreground.
+     */
     public void setMap(TiledMap tiledMap) {
         this.tiledRenderer.setMap(tiledMap);
 

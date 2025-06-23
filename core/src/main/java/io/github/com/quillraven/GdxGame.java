@@ -75,6 +75,9 @@ public class GdxGame extends Game {
         screenCache.remove(screen.getClass());
     }
 
+    /**
+     * Renders the current screen with performance monitoring.
+     */
     @Override
     public void render() {
         glProfiler.reset();
@@ -94,6 +97,9 @@ public class GdxGame extends Game {
         super.resize(width, height);
     }
 
+    /**
+     * Cleans up all game resources and services.
+     */
     @Override
     public void dispose() {
         for (Screen screen : screenCache.values()) {

@@ -28,6 +28,9 @@ public class MenuView extends View<MenuViewModel> {
         selectMenuItem(this.selectedItem);
     }
 
+    /**
+     * Selects a menu item and animates the selection indicator.
+     */
     private void selectMenuItem(Group menuItem) {
         if (selectionImg.getParent() != null) {
             selectionImg.getParent().removeActor(selectionImg);
@@ -54,6 +57,9 @@ public class MenuView extends View<MenuViewModel> {
         )));
     }
 
+    /**
+     * Sets up the main UI layout with banner and menu content.
+     */
     @Override
     protected void setupUI() {
         setFillParent(true);
@@ -68,6 +74,9 @@ public class MenuView extends View<MenuViewModel> {
         add(label).padRight(5.0f).padBottom(5f).expand().align(Align.bottomRight);
     }
 
+    /**
+     * Creates the menu content with buttons and volume sliders.
+     */
     private void setupMenuContent() {
         Table contentTable = new Table();
         contentTable.setBackground(skin.getDrawable("frame"));
@@ -114,6 +123,9 @@ public class MenuView extends View<MenuViewModel> {
         return slider;
     }
 
+    /**
+     * Moves selection to the next menu item.
+     */
     @Override
     public void onDown() {
         Group menuContentTable = this.selectedItem.getParent();
@@ -127,6 +139,9 @@ public class MenuView extends View<MenuViewModel> {
         selectMenuItem((Group) menuContentTable.getChild(currentIdx));
     }
 
+    /**
+     * Moves selection to the previous menu item.
+     */
     @Override
     public void onUp() {
         Group menuContentTable = this.selectedItem.getParent();

@@ -22,6 +22,9 @@ public class TriggerSystem extends IteratingSystem {
         this.audioService = audioService;
     }
 
+    /**
+     * Processes triggered entities and fires appropriate trigger effects.
+     */
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         Trigger trigger = Trigger.MAPPER.get(entity);
@@ -41,6 +44,9 @@ public class TriggerSystem extends IteratingSystem {
         return null;
     }
 
+    /**
+     * Routes trigger events to appropriate handlers based on trigger name.
+     */
     private void fireTrigger(String triggerName, Entity triggeringEntity) {
         switch (triggerName) {
             case "trap_trigger" -> trapTrigger(triggeringEntity);
@@ -48,6 +54,9 @@ public class TriggerSystem extends IteratingSystem {
         }
     }
 
+    /**
+     * Handles trap trigger effects including animation and damage.
+     */
     private void trapTrigger(Entity triggeringEntity) {
         Entity trapEntity = getByTiledId(15);
         if (trapEntity != null) {

@@ -75,6 +75,9 @@ public class TiledService {
         this.loadTileConsumer = loadTileConsumer;
     }
 
+    /**
+     * Loads all map objects from different layers and creates map collision boundaries.
+     */
     public void loadMapObjects(TiledMap tiledMap) {
         for (MapLayer layer : tiledMap.getLayers()) {
             if (layer instanceof TiledMapTileLayer tileLayer) {
@@ -89,8 +92,10 @@ public class TiledService {
         spawnMapBoundary(tiledMap);
     }
 
+    /**
+     * Creates physics boundaries around the map edges.
+     */
     private void spawnMapBoundary(TiledMap tiledMap) {
-        // create four boxes for the map boundary (left, right, bottom and top edge)
         int width = tiledMap.getProperties().get("width", 0, Integer.class);
         int tileW = tiledMap.getProperties().get("tilewidth", 0, Integer.class);
         int height = tiledMap.getProperties().get("height", 0, Integer.class);
