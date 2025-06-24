@@ -8,13 +8,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import io.github.com.quillraven.GdxGame;
 import io.github.com.quillraven.component.Graphic;
 import io.github.com.quillraven.component.Transform;
-import io.github.com.quillraven.tiled.TiledRenderer;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,7 +27,7 @@ public class RenderSystem extends SortedIteratingSystem implements Disposable {
     private final OrthographicCamera camera;
     private final Viewport viewport;
 
-    private final TiledRenderer tiledRenderer;
+    private final BatchTiledMapRenderer tiledRenderer;
     private final List<MapLayer> fgdLayers;
     private final List<MapLayer> bgdLayers;
 
@@ -38,7 +40,7 @@ public class RenderSystem extends SortedIteratingSystem implements Disposable {
         this.batch = batch;
         this.viewport = viewport;
         this.camera = camera;
-        this.tiledRenderer = new TiledRenderer(batch);
+        this.tiledRenderer = new OrthogonalTiledMapRenderer(null, GdxGame.UNIT_SCALE, batch);
         this.fgdLayers = new ArrayList<>();
         this.bgdLayers = new ArrayList<>();
     }
@@ -54,13 +56,13 @@ public class RenderSystem extends SortedIteratingSystem implements Disposable {
         batch.begin();
         batch.setColor(Color.WHITE);
         this.tiledRenderer.setView(camera);
-        this.tiledRenderer.renderLayers(bgdLayers);
+        bgdLayers.forEach(tiledRenderer::renderMapLayer);
 
         forceSort();
         super.update(deltaTime);
 
         batch.setColor(Color.WHITE);
-        this.tiledRenderer.renderLayers(fgdLayers);
+        fgdLayers.forEach(tiledRenderer::renderMapLayer);
         batch.end();
     }
 

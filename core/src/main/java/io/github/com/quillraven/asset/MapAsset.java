@@ -1,7 +1,9 @@
 package io.github.com.quillraven.asset;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.maps.tiled.BaseTiledMapLoader;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
 public enum MapAsset implements Asset<TiledMap> {
     MAIN("mainmap.tmx");
@@ -9,7 +11,9 @@ public enum MapAsset implements Asset<TiledMap> {
     private final AssetDescriptor<TiledMap> descriptor;
 
     MapAsset(String mapName) {
-        this.descriptor = new AssetDescriptor<>("maps/" + mapName, TiledMap.class);
+        BaseTiledMapLoader.Parameters parameters = new TmxMapLoader.Parameters();
+        parameters.projectFilePath = "maps/mystic.tiled-project";
+        this.descriptor = new AssetDescriptor<>("maps/" + mapName, TiledMap.class, parameters);
     }
 
     @Override
