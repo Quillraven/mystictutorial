@@ -60,18 +60,31 @@ public class GameView extends View<GameViewModel> {
         }
     }
 
+    private Vector2 toStageCoords(Vector2 gamePosition) {
+        Vector2 resultPosition = viewModel.toScreenCoords(gamePosition);
+        stage.getViewport().unproject(resultPosition);
+        resultPosition.y = stage.getViewport().getWorldHeight() - resultPosition.y;
+        return resultPosition;
+    }
+
     /**
      * Shows animated damage text at the specified position.
      */
     private void showDamage(Map.Entry<Vector2, Integer> damAndPos) {
-        Vector2 position = damAndPos.getKey();
+        final Vector2 position = damAndPos.getKey();
         int damage = damAndPos.getValue();
-        stage.getViewport().unproject(position);
-        position.y = stage.getViewport().getWorldHeight() - position.y;
 
         TextraLabel textraLabel = new TypingLabel("[%75]{JUMP=2.0;0.5;0.9}{RAINBOW}" + damage, skin, "small");
-        textraLabel.setPosition(position.x, position.y);
         stage.addActor(textraLabel);
-        textraLabel.addAction(Actions.sequence(Actions.delay(1.25f), Actions.removeActor()));
+
+        textraLabel.addAction(
+            Actions.parallel(
+                Actions.sequence(Actions.delay(1.25f), Actions.removeActor()),
+                Actions.forever(Actions.run(() -> {
+                    Vector2 stageCoords = toStageCoords(position);
+                    textraLabel.setPosition(stageCoords.x, stageCoords.y);
+                }))
+            )
+        );
     }
 }

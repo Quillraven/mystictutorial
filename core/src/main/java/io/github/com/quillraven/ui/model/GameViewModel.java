@@ -15,16 +15,16 @@ public class GameViewModel extends ViewModel {
     private final AudioService audioService;
     private int lifePoints;
     private int maxLife;
-    private final Vector2 tmpVec2;
     private Map.Entry<Vector2, Integer> playerDamage;
+    private final Vector2 tmpVec2;
 
     public GameViewModel(GdxGame game) {
         super(game);
         this.audioService = game.getAudioService();
         this.lifePoints = 0;
         this.maxLife = 0;
-        this.tmpVec2 = new Vector2();
         this.playerDamage = null;
+        this.tmpVec2 = new Vector2();
     }
 
     public void setMaxLife(int maxLife) {
@@ -58,10 +58,15 @@ public class GameViewModel extends ViewModel {
     }
 
     public void playerDamage(int amount, float x, float y) {
-        tmpVec2.set(x, y);
-        game.getViewport().project(tmpVec2);
-
-        this.playerDamage = Map.entry(tmpVec2, amount);
+        Vector2 position = new Vector2(x, y);
+        this.playerDamage = Map.entry(position, amount);
         this.propertyChangeSupport.firePropertyChange(PLAYER_DAMAGE, null, this.playerDamage);
+    }
+
+    public Vector2 toScreenCoords(Vector2 position) {
+        tmpVec2.set(position);
+        game.getViewport().project(tmpVec2);
+        return tmpVec2;
+
     }
 }
