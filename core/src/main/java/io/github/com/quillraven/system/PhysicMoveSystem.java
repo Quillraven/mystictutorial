@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import io.github.com.quillraven.component.Facing;
 import io.github.com.quillraven.component.Move;
 import io.github.com.quillraven.component.Physic;
 
@@ -13,7 +12,7 @@ public class PhysicMoveSystem extends IteratingSystem {
     private static final Vector2 TMP_VEC2 = new Vector2();
 
     public PhysicMoveSystem() {
-        super(Family.all(Physic.class, Move.class, Facing.class).get());
+        super(Family.all(Physic.class, Move.class).get());
     }
 
     @Override
