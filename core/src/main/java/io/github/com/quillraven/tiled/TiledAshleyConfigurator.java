@@ -231,7 +231,7 @@ public class TiledAshleyConfigurator {
     private void addEntityPhysic(MapObjects mapObjects, BodyType bodyType, Vector2 relativeTo, Entity entity) {
         if (mapObjects.getCount() == 0) return;
 
-        Transform transform = entity.getComponent(Transform.class);
+        Transform transform = Transform.MAPPER.get(entity);
         Body body = createBody(mapObjects,
             transform.getPosition(),
             transform.getScaling(),

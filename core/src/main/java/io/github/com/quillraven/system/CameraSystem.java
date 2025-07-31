@@ -47,19 +47,21 @@ public class CameraSystem extends IteratingSystem {
      */
     private void calcTargetPosition(Vector2 entityPosition) {
         float targetX = entityPosition.x;
-        float targetY = entityPosition.y + CAM_OFFSET_Y;
         float camHalfW = camera.viewportWidth * 0.5f;
         if (mapW > camHalfW) {
             float min = Math.min(camHalfW, mapW - camHalfW);
             float max = Math.max(camHalfW, mapW - camHalfW);
             targetX = MathUtils.clamp(targetX, min, max);
         }
+
+        float targetY = entityPosition.y + CAM_OFFSET_Y;
         float camHalfH = camera.viewportHeight * 0.5f;
         if (mapH > camHalfH) {
             float min = Math.min(camHalfH, mapH - camHalfH);
             float max = Math.max(camHalfH, mapH - camHalfH);
             targetY = MathUtils.clamp(targetY, min, max);
         }
+
         this.targetPosition.set(targetX, targetY);
     }
 
@@ -79,8 +81,6 @@ public class CameraSystem extends IteratingSystem {
             return;
         }
 
-        Transform transform = Transform.MAPPER.get(camEntity);
-        calcTargetPosition(transform.getPosition());
-        camera.position.set(this.targetPosition.x, this.targetPosition.y, camera.position.z);
+        processEntity(camEntity, 0f);
     }
 }
