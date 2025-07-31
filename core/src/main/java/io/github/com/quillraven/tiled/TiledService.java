@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import io.github.com.quillraven.GdxGame;
 import io.github.com.quillraven.asset.AssetService;
@@ -50,6 +51,15 @@ public class TiledService {
     public void setMap(TiledMap tiledMap) {
         if (this.currentMap != null) {
             this.assetService.unload(this.currentMap.getProperties().get("mapAsset", MapAsset.class));
+
+            // quick and dirt environment body cleanup (=map boundary and static tile collision bodies)
+            Array<Body> bodies = new Array<>();
+            physicWorld.getBodies(bodies);
+            for (Body body : bodies) {
+                if ("environment".equals(body.getUserData())) {
+                    physicWorld.destroyBody(body);
+                }
+            }
         }
 
         this.currentMap = tiledMap;
@@ -111,6 +121,7 @@ public class TiledService {
         bodyDef.position.setZero();
         bodyDef.fixedRotation = true;
         Body body = physicWorld.createBody(bodyDef);
+        body.setUserData("environment");
 
         // left edge
         PolygonShape shape = new PolygonShape();
