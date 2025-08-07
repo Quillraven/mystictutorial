@@ -136,5 +136,6 @@ public class GameScreen extends ScreenAdapter {
             }
         }
         this.physicWorld.dispose();
+        this.stage.dispose();
     }
 }
