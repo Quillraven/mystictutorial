@@ -27,6 +27,7 @@ The game itself contains:
 - [Cute Fantasy assets](https://kenmi-art.itch.io/cute-fantasy-rpg)
 - [JRPG Music](https://yubatake.bandcamp.com/album/jrpg-collection)
 - [UI essentials](https://crusenho.itch.io/complete-ui-essential-pack)
+- [UI pack forest](https://toffeecraft.itch.io/ui-user-interface-forest)
 - [8-bit-fantasy Music](https://xdeviruchi.itch.io/8-bit-fantasy-adventure-music-pack)
 - [SFX generator](https://sfxr.me/)
 - [Training dummy](https://elthen.itch.io/2d-pixel-art-training-dummy)
